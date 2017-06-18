@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TstGame</string>
+    <string name="strStart">Start</string>
+    <string name="title_activity_game_main">GameMain</string>
+</resources>
