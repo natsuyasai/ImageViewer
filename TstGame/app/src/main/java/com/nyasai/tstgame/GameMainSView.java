@@ -1,16 +1,19 @@
 package com.nyasai.tstgame;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class GameMainSView extends SurfaceView {
-  Paint p;
+
+  private Paint p;
+  DrawLLL clsDrawLLL;
 
   public GameMainSView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
@@ -24,13 +27,12 @@ public class GameMainSView extends SurfaceView {
 
   private void Init(){
     p = new Paint();
-
-    p.setColor(Color.BLACK);
+    clsDrawLLL = new DrawLLL();
     getHolder().addCallback(
         new SurfaceHolder.Callback() {
           @Override
           public void surfaceCreated(SurfaceHolder surfaceHolder) {
-
+            clsDrawLLL.DoDrawLLL(surfaceHolder);
           }
 
           @Override
@@ -46,6 +48,8 @@ public class GameMainSView extends SurfaceView {
     );
 
   }
+
+
 
 
 }
