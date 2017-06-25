@@ -21,7 +21,7 @@ public class HomeActivity extends AppCompatActivity {
     btnStart.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        Intent intent = new Intent(HomeActivity.this,com.nyasai.tstgame.GameMain.class);
+        Intent intent = new Intent(HomeActivity.this,GameActivity.class);
 
         startActivity(intent);
       }

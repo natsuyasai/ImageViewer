@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 
-public class GameMain extends AppCompatActivity {
+/**
+ * ゲームメインアクテイビティ用クラス
+ */
+public class GameActivity extends AppCompatActivity {
 
   GameMainSView m_gSView;
 

@@ -4,57 +4,154 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-public class GameMainSView extends SurfaceView {
+/**
+ * ゲーム描画用SurfaceViewクラス
+ */
+public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback{
 
-  private Paint p;
-  private DrawLLL clsDrawLLL;
-  private float fX;
-  private float fY;
+  private GameThread m_clsGThread;
 
+  /**
+   * コンストラクタ
+   * @param context
+   * @param attrs
+   * @param defStyleAttr
+   */
   public GameMainSView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    Init();
   }
 
+  /**
+   * コンストラクタ
+   * @param context
+   */
   public GameMainSView(Context context) {
     super(context);
-    Init();
+    SurfaceHolder clsHolder = getHolder();
+    clsHolder.addCallback(this);
+    /*
+    スレッド用インスタンス生成
+     */
+    m_clsGThread = new GameThread(clsHolder,context,new Handler(){
+
+      @Override
+      public void handleMessage(Message msg) {
+        super.handleMessage(msg);
+      }
+    });
   }
 
-  private void Init(){
-    p = new Paint();
-    fX = 0.0f;
-    fY = 0.0f;
-    clsDrawLLL = new DrawLLL();
-    getHolder().addCallback(
-        new SurfaceHolder.Callback() {
-          @Override
-          public void surfaceCreated(SurfaceHolder surfaceHolder) {
-            clsDrawLLL.DoLLL(surfaceHolder);
-          }
-
-          @Override
-          public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-            clsDrawLLL.DoLLL(surfaceHolder);
-            //clsDrawLLL.InjectBullet(surfaceHolder,fX+=1,fY+=1);
-          }
-
-          @Override
-          public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-
-          }
-        }
-    );
-
+  /**
+   * コンストラクタ
+   * @param context
+   * @param attrs
+   */
+  public GameMainSView(Context context, AttributeSet attrs) {
+    super(context, attrs);
   }
 
 
+  /**
+   * サーフェス生成時
+   * @param surfaceHolder
+   */
+  @Override
+  public void surfaceCreated(SurfaceHolder surfaceHolder) {
+    // 描画用スレッド開始
+    m_clsGThread.start();
+  }
 
+  /**
+   * サーフェス変更時
+   * @param surfaceHolder
+   * @param i
+   * @param i1
+   * @param i2
+   */
+  @Override
+  public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+
+  }
+
+  /**
+   * サーフェス削除時
+   * @param surfaceHolder
+   */
+  @Override
+  public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+    // 削除
+    m_clsGThread = null;
+  }
+
+
+  /**
+   * SurfaceView用スレッドクラス
+   */
+  public class GameThread extends Thread {
+
+    /**
+     * サーフェスホルダ
+     */
+    SurfaceHolder clsSdcHolder;
+    /**
+     * スレッド実行ループ状態
+     */
+    boolean blShouldContinue = true;
+    /**
+     * LLL描画クラス
+     */
+    private DrawLLL m_clsDrawLLL;
+
+
+    /**********************************/
+    /** 定数                          */
+    /*********************************/
+    // LLLデフォルトサイズ
+    static final int LLL_SIZE = 400;
+    // LLL初期サイズXオフセット
+    private final float LLL_DEF_X = 2.5f;
+    // LLL初期サイズYオフセット
+    private final float LLL_DEF_Y =5.5f;
+
+
+    /**
+     * コンストラクタ
+     * @param surfaceHolder
+     * @param context
+     * @param handler
+     */
+    public GameThread(SurfaceHolder surfaceHolder, Context context, Handler handler){
+      this.clsSdcHolder = surfaceHolder;
+      m_clsDrawLLL = new DrawLLL(context,LLL_SIZE,LLL_SIZE);
+    }
+
+
+    /**
+     * スレッド実行
+     */
+    @Override
+    public void run() {
+      while(blShouldContinue){
+        Canvas clsCanvas = clsSdcHolder.lockCanvas();
+        this.Draw(clsCanvas);
+        clsSdcHolder.unlockCanvasAndPost(clsCanvas);
+      }
+    }
+
+    /**
+     * 描画
+     * @param clsCanvas
+     */
+    public void Draw(Canvas clsCanvas){
+      clsCanvas.drawColor(Color.GRAY);
+      m_clsDrawLLL.Draw(clsCanvas,(int)(clsCanvas.getWidth() / LLL_DEF_X),(int)(clsCanvas.getHeight()/ LLL_DEF_Y));
+    }
+  }
 
 }
