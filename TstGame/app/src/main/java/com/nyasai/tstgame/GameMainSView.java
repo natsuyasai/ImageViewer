@@ -13,7 +13,9 @@ import android.view.SurfaceView;
 public class GameMainSView extends SurfaceView {
 
   private Paint p;
-  DrawLLL clsDrawLLL;
+  private DrawLLL clsDrawLLL;
+  private float fX;
+  private float fY;
 
   public GameMainSView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
@@ -27,17 +29,20 @@ public class GameMainSView extends SurfaceView {
 
   private void Init(){
     p = new Paint();
+    fX = 0.0f;
+    fY = 0.0f;
     clsDrawLLL = new DrawLLL();
     getHolder().addCallback(
         new SurfaceHolder.Callback() {
           @Override
           public void surfaceCreated(SurfaceHolder surfaceHolder) {
-            clsDrawLLL.DoDrawLLL(surfaceHolder);
+            clsDrawLLL.DoLLL(surfaceHolder);
           }
 
           @Override
           public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
+            clsDrawLLL.DoLLL(surfaceHolder);
+            //clsDrawLLL.InjectBullet(surfaceHolder,fX+=1,fY+=1);
           }
 
           @Override

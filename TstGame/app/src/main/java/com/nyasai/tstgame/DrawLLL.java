@@ -18,9 +18,12 @@ public class DrawLLL {
     p = new Paint();
   }
 
+  public void DoLLL(SurfaceHolder surfaceHolder){
+    this.SetLLL(surfaceHolder);
+  }
 
   // LLL描画
-  public void DoDrawLLL(SurfaceHolder surfaceHolder){
+  public void SetLLL(SurfaceHolder surfaceHolder){
     // キャンバスロック（描画非更新）
     Canvas canvas = surfaceHolder.lockCanvas();
     // 描画色設定
@@ -36,4 +39,12 @@ public class DrawLLL {
     // キャンバス非更新解除
     surfaceHolder.unlockCanvasAndPost(canvas);
   }
+
+  public void InjectBullet(SurfaceHolder surfaceHolder,float fX,float fY){
+    Canvas canvas = surfaceHolder.lockCanvas();
+    canvas.drawColor(Color.GRAY);
+    canvas.drawText("L",canvas.getWidth() /fMltShtX+fX,canvas.getHeight()/fMltShtY+fY,p);
+    surfaceHolder.unlockCanvasAndPost(canvas);
+  }
+
 }
