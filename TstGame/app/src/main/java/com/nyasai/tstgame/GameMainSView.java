@@ -107,17 +107,28 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
      * LLL描画クラス
      */
     private DrawLLL m_clsDrawLLL;
+    /**
+     * 自機描画クラス
+     */
+    private DrawOwn m_clsDrawOwn;
 
 
     /**********************************/
     /** 定数                          */
     /*********************************/
     // LLLデフォルトサイズ
-    static final int LLL_SIZE = 400;
+    static final int LLL_SIZE = 250;
     // LLL初期サイズXオフセット
     private final float LLL_DEF_X = 2.5f;
     // LLL初期サイズYオフセット
     private final float LLL_DEF_Y =5.5f;
+
+    // 自機デフォルトサイズ
+    static final int OWN_SIZE = 150;
+    // 自機初期サイズXオフセット
+    private final float OWN_DEF_X = 2.5f;
+    // 自機初期サイズYオフセット
+    private final float OWN_DEF_Y =1.5f;
 
 
     /**
@@ -129,6 +140,7 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
     public GameThread(SurfaceHolder surfaceHolder, Context context, Handler handler){
       this.clsSdcHolder = surfaceHolder;
       m_clsDrawLLL = new DrawLLL(context,LLL_SIZE,LLL_SIZE);
+      m_clsDrawOwn = new DrawOwn(context,OWN_SIZE,OWN_SIZE);
     }
 
 
@@ -151,6 +163,7 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
     public void Draw(Canvas clsCanvas){
       clsCanvas.drawColor(Color.GRAY);
       m_clsDrawLLL.Draw(clsCanvas,(int)(clsCanvas.getWidth() / LLL_DEF_X),(int)(clsCanvas.getHeight()/ LLL_DEF_Y));
+      m_clsDrawOwn.Draw(clsCanvas,(int)(clsCanvas.getWidth() / OWN_DEF_X),(int)(clsCanvas.getHeight()/ OWN_DEF_Y));
     }
   }
 
