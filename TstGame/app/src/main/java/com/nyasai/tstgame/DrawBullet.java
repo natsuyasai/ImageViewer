@@ -43,9 +43,22 @@ public class DrawBullet extends AbstractGameObject {
     }
   }
 
-
+  /**
+   * 座標移動
+   * @param canvas
+   */
   public void DrawLoop(Canvas canvas){
     super.Draw(canvas,m_iDefX,m_iY);
     m_iY+=m_fVelocity;
+  }
+
+  public void MoveSin(Canvas canvas){
+    super.Draw(canvas,m_iX,m_iY);
+    m_iX += (int) Math.tan(m_iX) + m_fVelocity;
+    m_iY += (int) Math.sin(m_iY) + m_fVelocity;
+  }
+
+  public void SetVelocity(float v){
+    m_fVelocity = v;
   }
 }

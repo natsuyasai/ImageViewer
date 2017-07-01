@@ -115,13 +115,15 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
     /**
      * 敵弾クラス
      */
-    private DrawBullet m_clsDrawBllt;
+    private DrawBullet[] m_clsDrawBllt;
 
     /**
      * ウィンドウサイズ
      */
     private int m_iWidth;
     private int m_iHeight;
+
+    private int m_iGameState = GameState.STS_INIT;
 
 
     /**********************************/
@@ -147,6 +149,8 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
     private final int BLT_DEF_X = 300;
     // 敵弾初期サイズYオフセット
     private final int BLT_DEF_Y = 300;
+    // 弾数
+    private final int BLT_NUM = 10;
 
 
     /**
@@ -159,7 +163,10 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
       this.clsSdcHolder = surfaceHolder;
       m_clsDrawLLL = new DrawLLL(context,LLL_SIZE,LLL_SIZE);
       m_clsDrawOwn = new DrawOwn(context,OWN_SIZE,OWN_SIZE);
-      m_clsDrawBllt = new DrawBullet(context,BLT_SIZE,BLT_SIZE);
+      m_clsDrawBllt = new DrawBullet[10];
+      for(int i=0; i<BLT_NUM;i++){
+        m_clsDrawBllt[i] = new DrawBullet(context,BLT_SIZE,BLT_SIZE);
+      }
 
     }
 
@@ -182,10 +189,26 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
      */
     public void Draw(Canvas clsCanvas){
       clsCanvas.drawColor(Color.GRAY);
-      m_clsDrawLLL.Draw(clsCanvas,(int)(clsCanvas.getWidth() / LLL_DEF_X),(int)(clsCanvas.getHeight()/ LLL_DEF_Y));
-      m_clsDrawOwn.Draw(clsCanvas,(int)(clsCanvas.getWidth() / OWN_DEF_X),(int)(clsCanvas.getHeight()/ OWN_DEF_Y));
-      m_clsDrawBllt.SetIniPos((int)(m_clsDrawLLL.GetPosX()/LLL_DEF_X)+BLT_DEF_X,(int)(m_clsDrawLLL.GetPosY()/LLL_DEF_Y)+BLT_DEF_Y);
-      m_clsDrawBllt.DrawLoop(clsCanvas);
+      switch (m_iGameState){
+        case GameState.STS_INIT: // ゲーム初期化
+          m_iGameState = GameState.STS_GAME_MAIN01;
+        case GameState.STS_GAME_MAIN01: // ゲームメイン01
+          m_clsDrawLLL.Draw(clsCanvas,(int)(clsCanvas.getWidth() / LLL_DEF_X),(int)(clsCanvas.getHeight()/ LLL_DEF_Y));
+          m_clsDrawOwn.Draw(clsCanvas,(int)(clsCanvas.getWidth() / OWN_DEF_X),(int)(clsCanvas.getHeight()/ OWN_DEF_Y));
+          for(int i=0; i<BLT_NUM; i++)
+          {
+            m_clsDrawBllt[i].SetIniPos((int)(m_clsDrawLLL.GetPosX()/LLL_DEF_X)+BLT_DEF_X,(int)(m_clsDrawLLL.GetPosY()/LLL_DEF_Y)+BLT_DEF_Y-(i*10));
+            if(i%2==0){
+              m_clsDrawBllt[i].MoveSin(clsCanvas);
+            }
+            else{
+              m_clsDrawBllt[i].DrawLoop(clsCanvas);
+            }
+          }
+        default:
+      }
+
+
     }
 
 
@@ -199,10 +222,6 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
       this.m_iHeight = iHght;
     }
 
-
-    private void SetBulletPos(int iWdth, int iHght){
-      m_clsDrawBllt.SetIniPos((int)(m_clsDrawLLL.GetPosX()/LLL_DEF_X),(int)(m_clsDrawLLL.GetPosY()/LLL_DEF_Y));
-    }
 
   }
 
