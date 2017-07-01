@@ -37,6 +37,8 @@ public abstract class AbstractGameObject {
    */
   public void Draw(Canvas clsCanvas, int iX,int iY){
     m_clsDrawableImg.setBounds(iX,iY,iX+m_iWdth,iY+m_iHght);
+    m_iX = iX;
+    m_iY = iY;
     m_clsDrawableImg.draw(clsCanvas);
   }
 }

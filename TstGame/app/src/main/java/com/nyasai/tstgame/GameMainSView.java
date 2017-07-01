@@ -39,12 +39,13 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
     スレッド用インスタンス生成
      */
     m_clsGThread = new GameThread(clsHolder,context,new Handler(){
-
       @Override
       public void handleMessage(Message msg) {
         super.handleMessage(msg);
       }
     });
+    // ウィンドウサイズ設定
+    m_clsGThread.SetWindowSize(getWidth(),getHeight());
   }
 
   /**
@@ -111,6 +112,16 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
      * 自機描画クラス
      */
     private DrawOwn m_clsDrawOwn;
+    /**
+     * 敵弾クラス
+     */
+    private DrawBullet m_clsDrawBllt;
+
+    /**
+     * ウィンドウサイズ
+     */
+    private int m_iWidth;
+    private int m_iHeight;
 
 
     /**********************************/
@@ -130,6 +141,13 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
     // 自機初期サイズYオフセット
     private final float OWN_DEF_Y =1.5f;
 
+    // 敵弾デフォルトサイズ
+    static final int BLT_SIZE = 150;
+    // 敵弾初期サイズXオフセット
+    private final int BLT_DEF_X = 300;
+    // 敵弾初期サイズYオフセット
+    private final int BLT_DEF_Y = 300;
+
 
     /**
      * コンストラクタ
@@ -141,6 +159,8 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
       this.clsSdcHolder = surfaceHolder;
       m_clsDrawLLL = new DrawLLL(context,LLL_SIZE,LLL_SIZE);
       m_clsDrawOwn = new DrawOwn(context,OWN_SIZE,OWN_SIZE);
+      m_clsDrawBllt = new DrawBullet(context,BLT_SIZE,BLT_SIZE);
+
     }
 
 
@@ -164,7 +184,26 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
       clsCanvas.drawColor(Color.GRAY);
       m_clsDrawLLL.Draw(clsCanvas,(int)(clsCanvas.getWidth() / LLL_DEF_X),(int)(clsCanvas.getHeight()/ LLL_DEF_Y));
       m_clsDrawOwn.Draw(clsCanvas,(int)(clsCanvas.getWidth() / OWN_DEF_X),(int)(clsCanvas.getHeight()/ OWN_DEF_Y));
+      m_clsDrawBllt.SetIniPos((int)(m_clsDrawLLL.GetPosX()/LLL_DEF_X)+BLT_DEF_X,(int)(m_clsDrawLLL.GetPosY()/LLL_DEF_Y)+BLT_DEF_Y);
+      m_clsDrawBllt.DrawLoop(clsCanvas);
     }
+
+
+    /**
+     * ウィンドウサイズSetter
+     * @param iWdth
+     * @param iHght
+     */
+    public void SetWindowSize(int iWdth, int iHght){
+      this.m_iHeight = iHght;
+      this.m_iHeight = iHght;
+    }
+
+
+    private void SetBulletPos(int iWdth, int iHght){
+      m_clsDrawBllt.SetIniPos((int)(m_clsDrawLLL.GetPosX()/LLL_DEF_X),(int)(m_clsDrawLLL.GetPosY()/LLL_DEF_Y));
+    }
+
   }
 
 }
