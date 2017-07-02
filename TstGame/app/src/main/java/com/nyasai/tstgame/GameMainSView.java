@@ -86,6 +86,7 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
    */
   @Override
   public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+    m_clsGThread.SetThredSts(false);
     // 削除
     m_clsGThread = null;
   }
@@ -103,7 +104,7 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
     /**
      * スレッド実行ループ状態
      */
-    boolean blShouldContinue = true;
+    private boolean blShouldContinue = true;
     /**
      * LLL描画クラス
      */
@@ -170,7 +171,6 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
 
     }
 
-
     /**
      * スレッド実行
      */
@@ -182,6 +182,15 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
         clsSdcHolder.unlockCanvasAndPost(clsCanvas);
       }
     }
+
+    /**
+     * スレッド動作設定
+     * @param blSts
+     */
+    public void SetThredSts(boolean blSts){
+      blShouldContinue = blSts;
+    }
+
 
     /**
      * 描画
