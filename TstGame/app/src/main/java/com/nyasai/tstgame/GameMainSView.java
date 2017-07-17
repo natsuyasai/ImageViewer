@@ -204,6 +204,7 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
         case GameState.STS_GAME_MAIN01: // ゲームメイン01
           m_clsDrawLLL.Draw(clsCanvas,(int)(clsCanvas.getWidth() / LLL_DEF_X),(int)(clsCanvas.getHeight()/ LLL_DEF_Y));
           m_clsDrawOwn.Draw(clsCanvas,(int)(clsCanvas.getWidth() / OWN_DEF_X),(int)(clsCanvas.getHeight()/ OWN_DEF_Y));
+          // TODO タイマータスクで定期実行させる？
           for(int i=0; i<BLT_NUM; i++)
           {
             m_clsDrawBllt[i].SetIniPos((int)(m_clsDrawLLL.GetPosX()/LLL_DEF_X)+BLT_DEF_X,(int)(m_clsDrawLLL.GetPosY()/LLL_DEF_Y)+BLT_DEF_Y-(i*10));
