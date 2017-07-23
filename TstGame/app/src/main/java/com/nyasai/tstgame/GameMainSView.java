@@ -200,21 +200,15 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
       clsCanvas.drawColor(Color.GRAY);
       switch (m_iGameState){
         case GameState.STS_INIT: // ゲーム初期化
-          m_iGameState = GameState.STS_GAME_MAIN01;
+          m_iGameState = GameState.STS_GAME_MAIN01; // 状態遷移
         case GameState.STS_GAME_MAIN01: // ゲームメイン01
-          m_clsDrawLLL.Draw(clsCanvas,(int)(clsCanvas.getWidth() / LLL_DEF_X),(int)(clsCanvas.getHeight()/ LLL_DEF_Y));
-          m_clsDrawOwn.Draw(clsCanvas,(int)(clsCanvas.getWidth() / OWN_DEF_X),(int)(clsCanvas.getHeight()/ OWN_DEF_Y));
+          m_clsDrawLLL.Draw(clsCanvas,(int)(clsCanvas.getWidth() / LLL_DEF_X),(int)(clsCanvas.getHeight()/ LLL_DEF_Y)); // 敵機表示
+          m_clsDrawOwn.Draw(clsCanvas,(int)(clsCanvas.getWidth() / OWN_DEF_X),(int)(clsCanvas.getHeight()/ OWN_DEF_Y)); // 自機表示
           // TODO タイマータスクで定期実行させる？
-          for(int i=0; i<BLT_NUM; i++)
-          {
-            m_clsDrawBllt[i].SetIniPos((int)(m_clsDrawLLL.GetPosX()/LLL_DEF_X)+BLT_DEF_X,(int)(m_clsDrawLLL.GetPosY()/LLL_DEF_Y)+BLT_DEF_Y-(i*10));
-            if(i%2==0){
-              m_clsDrawBllt[i].MoveSin(clsCanvas);
-            }
-            else{
-              m_clsDrawBllt[i].DrawLoop(clsCanvas);
-            }
+          for(int i= 0; i<BLT_NUM; i++){
+            m_clsDrawBllt[i].BulletTimerStart(clsCanvas);
           }
+
         default:
       }
 
