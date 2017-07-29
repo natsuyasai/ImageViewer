@@ -41,4 +41,6 @@ public abstract class AbstractGameObject {
     m_iY = iY;
     m_clsDrawableImg.draw(clsCanvas);
   }
+
+
 }

@@ -16,6 +16,7 @@ public class GameActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_game_main);
+    ContextManager.onCreateApplication(getApplicationContext());
     m_gSView = new GameMainSView(this);
     setContentView(m_gSView);
   }

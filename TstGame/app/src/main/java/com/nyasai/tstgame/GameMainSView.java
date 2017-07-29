@@ -10,6 +10,8 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.List;
+
 /**
  * ゲーム描画用SurfaceViewクラス
  */
@@ -117,6 +119,11 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
      * 敵弾クラス
      */
     private DrawBullet[] m_clsDrawBllt;
+    /**
+     * LLL生成リスト
+     */
+    private List<DrawLLL> m_lstLLL;
+
 
     /**
      * ウィンドウサイズ
@@ -153,6 +160,8 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
     // 弾数
     private final int BLT_NUM = 10;
 
+    private int i=0;
+
 
     /**
      * コンストラクタ
@@ -162,12 +171,9 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
      */
     public GameThread(SurfaceHolder surfaceHolder, Context context, Handler handler){
       this.clsSdcHolder = surfaceHolder;
-      m_clsDrawLLL = new DrawLLL(context,LLL_SIZE,LLL_SIZE);
+      m_clsDrawLLL = new DrawLLL(ContextManager.GetContext(),LLL_SIZE,LLL_SIZE);
       m_clsDrawOwn = new DrawOwn(context,OWN_SIZE,OWN_SIZE);
       m_clsDrawBllt = new DrawBullet[10];
-      for(int i=0; i<BLT_NUM;i++){
-        m_clsDrawBllt[i] = new DrawBullet(context,BLT_SIZE,BLT_SIZE);
-      }
 
     }
 
@@ -198,18 +204,18 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
      */
     public void Draw(Canvas clsCanvas){
       clsCanvas.drawColor(Color.GRAY);
+      m_iWidth = clsCanvas.getWidth();
+      m_iHeight = clsCanvas.getHeight();
       switch (m_iGameState){
         case GameState.STS_INIT: // ゲーム初期化
           m_iGameState = GameState.STS_GAME_MAIN01; // 状態遷移
+          break;
         case GameState.STS_GAME_MAIN01: // ゲームメイン01
-          m_clsDrawLLL.Draw(clsCanvas,(int)(clsCanvas.getWidth() / LLL_DEF_X),(int)(clsCanvas.getHeight()/ LLL_DEF_Y)); // 敵機表示
-          m_clsDrawOwn.Draw(clsCanvas,(int)(clsCanvas.getWidth() / OWN_DEF_X),(int)(clsCanvas.getHeight()/ OWN_DEF_Y)); // 自機表示
-          // TODO タイマータスクで定期実行させる？
-          for(int i= 0; i<BLT_NUM; i++){
-            m_clsDrawBllt[i].BulletTimerStart(clsCanvas);
-          }
-
+          m_clsDrawLLL.Draw(clsCanvas,(int)(clsCanvas.getWidth() / LLL_DEF_X+i),(int)(clsCanvas.getHeight()/ LLL_DEF_Y+i)); // 敵機表示
+          i++;
+          break;
         default:
+          break;
       }
 
 
