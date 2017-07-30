@@ -10,7 +10,9 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * ゲーム描画用SurfaceViewクラス
@@ -160,7 +162,7 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
     // 弾数
     private final int BLT_NUM = 10;
 
-    private int i=0;
+    private Random rand;
 
 
     /**
@@ -173,8 +175,8 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
       this.clsSdcHolder = surfaceHolder;
       m_clsDrawLLL = new DrawLLL(ContextManager.GetContext(),LLL_SIZE,LLL_SIZE);
       m_clsDrawOwn = new DrawOwn(context,OWN_SIZE,OWN_SIZE);
-      m_clsDrawBllt = new DrawBullet[10];
-
+      m_lstLLL = new ArrayList<DrawLLL>();
+      rand = new Random();
     }
 
     /**
@@ -206,13 +208,23 @@ public class GameMainSView extends SurfaceView implements SurfaceHolder.Callback
       clsCanvas.drawColor(Color.GRAY);
       m_iWidth = clsCanvas.getWidth();
       m_iHeight = clsCanvas.getHeight();
+      DrawLLL lll = new DrawLLL(ContextManager.GetContext(),LLL_SIZE,LLL_SIZE);
+      int iW = rand.nextInt(m_iWidth);
+      int iH = rand.nextInt(m_iHeight);
+      m_lstLLL.add(lll);
       switch (m_iGameState){
         case GameState.STS_INIT: // ゲーム初期化
           m_iGameState = GameState.STS_GAME_MAIN01; // 状態遷移
           break;
         case GameState.STS_GAME_MAIN01: // ゲームメイン01
-          m_clsDrawLLL.Draw(clsCanvas,(int)(clsCanvas.getWidth() / LLL_DEF_X+i),(int)(clsCanvas.getHeight()/ LLL_DEF_Y+i)); // 敵機表示
-          i++;
+          for (DrawLLL drawLLL : m_lstLLL)
+          {
+            drawLLL.Draw(clsCanvas,rand.nextInt(m_iWidth),rand.nextInt(m_iHeight));
+          }
+          if(m_lstLLL.size() > 15) // 生成量が閾値を超えれば戦闘から順に削除
+          {
+            m_lstLLL.remove(0);
+          }
           break;
         default:
           break;
