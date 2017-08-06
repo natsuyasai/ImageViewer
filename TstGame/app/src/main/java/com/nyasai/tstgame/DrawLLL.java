@@ -10,8 +10,6 @@ public class DrawLLL extends AbstractGameObject{
   private Paint p;
 
 
-
-
   /**
    * コンストラクタ
    * @param clsCntext
@@ -20,7 +18,15 @@ public class DrawLLL extends AbstractGameObject{
    */
   public DrawLLL(Context clsCntext, int iWdth, int iHght) {
     super(clsCntext, R.drawable.lll, iWdth, iHght);
+    m_iX = Integer.MIN_VALUE;
+    m_iY = Integer.MIN_VALUE;
+  }
 
+  @Override
+  public void Draw(Canvas clsCanvas, int iX, int iY) {
+    super.Draw(clsCanvas, iX, iY);
+    m_iX = iX;
+    m_iY = iY;
   }
 
   public float GetPosX(){
