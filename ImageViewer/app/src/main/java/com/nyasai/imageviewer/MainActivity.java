@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -40,14 +42,16 @@ public class MainActivity extends AppCompatActivity {
    */
   private void StartMain()
   {
+    GridView gridView = (GridView)findViewById(R.id.gridView);
+    //gridView.setAdapter(new ArrayAdapter<String>(this));
     // 画像ファイル検索
-    SetupSearch();
+    SetupFile();
   }
 
   /***
    * ファイル検索開始
    */
-  private void SetupSearch()
+  private void SetupFile()
   {
     // 端末内の画像ファイル取得(URI)
     Cursor cursor = mfileManager.GetImageFileUri();
@@ -56,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> folderPathList = mfileManager.GetFolderPaths(cursor);
 
     // アダプタに登録
-    
+
   }
 
 
@@ -69,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     // 許可済
     if(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
     {
-      SetupSearch();
+      SetupFile();
     }
     else // 拒否時
     {
@@ -106,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     if (requestCode == REQUEST_PERMISSION) {
       // 使用が許可された
       if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-        SetupSearch();
+        SetupFile();
         return;
 
       } else {
