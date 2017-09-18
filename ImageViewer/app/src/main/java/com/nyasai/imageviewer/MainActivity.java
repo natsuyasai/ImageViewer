@@ -2,6 +2,7 @@ package com.nyasai.imageviewer;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -9,23 +10,38 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
   /***
-   *
+   * 権限
    */
   private final static int REQUEST_PERMISSION = 1002;
+
+  private FileManager mfileManager;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-
+    // コンテキスト設定
+    ContextManager.onCreateApplication(getApplicationContext());
+    mfileManager = new FileManager();
     // android6.0以上の場合は権限許可チェック
     if(Build.VERSION.SDK_INT >= 23)
       CheckPermission();
     else
-      SetupSearch();
+      StartMain();
+  }
+
+  /**
+   * メイン画面動作統括部
+   */
+  private void StartMain()
+  {
+    // 画像ファイル検索
+    SetupSearch();
   }
 
   /***
@@ -33,9 +49,18 @@ public class MainActivity extends AppCompatActivity {
    */
   private void SetupSearch()
   {
+    // 端末内の画像ファイル取得(URI)
+    Cursor cursor = mfileManager.GetImageFileUri();
 
+    // フォルダパス取得
+    ArrayList<String> folderPathList = mfileManager.GetFolderPaths(cursor);
+
+    // アダプタに登録
+    
   }
 
+
+  //region ファイルアクセス権限確認，取得系
   /**
    * ファイルアクセス権限確認
    */
@@ -91,4 +116,7 @@ public class MainActivity extends AppCompatActivity {
       }
     }
   }
+  //endregion
+
+
 }
