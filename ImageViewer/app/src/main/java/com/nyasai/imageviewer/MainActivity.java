@@ -29,12 +29,13 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     // コンテキスト設定
     ContextManager.onCreateApplication(getApplicationContext());
-    mfileManager = new FileManager();
     // android6.0以上の場合は権限許可チェック
     if(Build.VERSION.SDK_INT >= 23)
       CheckPermission();
-    else
+    else {
+      // ファイル一覧取得
       StartMain();
+    }
   }
 
   /**
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
   {
     // 初期設定
     GridView gridView = (GridView)findViewById(R.id.gridView);
+    mfileManager = new FileManager();
     //gridView.setAdapter(new ArrayAdapter<String>(this));
 
     // 画像ファイル検索
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     // 許可済
     if(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
     {
-      SetupFile();
+      StartMain();
     }
     else // 拒否時
     {
@@ -112,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     if (requestCode == REQUEST_PERMISSION) {
       // 使用が許可された
       if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-        SetupFile();
+        StartMain();
         return;
 
       } else {
