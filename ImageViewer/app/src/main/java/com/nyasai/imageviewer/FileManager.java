@@ -39,6 +39,7 @@ public class FileManager {
    */
   public FileManager()
   {
+    // 端末内のファイル一覧，フォルダパスを取得
     InitFileList();
   }
 
@@ -48,7 +49,9 @@ public class FileManager {
    */
   public void InitFileList()
   {
+    // 画像ファイル一覧取得
     LoadImageFileUri();
+    // 上記で取得した画像ファイル一覧(URI)からフォルダリストを取得
     CreateFolderPathList(mCursor);
   }
 
@@ -71,6 +74,16 @@ public class FileManager {
   }
 
   /**
+   * フォルダパス一覧取得
+   * @param cursor
+   * @return
+   */
+  private void CreateFolderPathList(Cursor cursor)
+  {
+    mfolderPathList = GetFolderPaths(cursor);
+  }
+
+  /**
    * フォルダパスリスト取得
    * 引数で渡された情報に対して処理を行う
    * @param cursor
@@ -80,7 +93,7 @@ public class FileManager {
   {
     // フォルダパスリスト
     ArrayList<String > folderPathList = new ArrayList<String>();
-
+    // URI情報の先頭に移動
     cursor.moveToFirst();
     int pathIndex = cursor.getColumnIndex(
         MediaStore.Images.Media.DATA);
@@ -144,14 +157,5 @@ public class FileManager {
     }
   }
 
-  /**
-   * フォルダパス一覧取得
-   * @param cursor
-   * @return
-   */
-  private void CreateFolderPathList(Cursor cursor)
-  {
-    mfolderPathList = GetFolderPaths(cursor);
-  }
 
 }
