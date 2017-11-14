@@ -1,6 +1,7 @@
 package com.nyasai.imageviewer;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
@@ -22,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
   private final static int REQUEST_PERMISSION = 1002;
 
   private FileManager mfileManager;
+  private Context mContext;
+  private ImageGridViewAdapter mImageGridViewAdapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     // コンテキスト設定
     ContextManager.onCreateApplication(getApplicationContext());
+    mContext = ContextManager.GetContext();
     // android6.0以上の場合は権限許可チェック
     if(Build.VERSION.SDK_INT >= 23)
       CheckPermission();
@@ -43,12 +47,10 @@ public class MainActivity extends AppCompatActivity {
    */
   private void StartMain()
   {
-    // 初期設定
-    GridView gridView = (GridView)findViewById(R.id.gridView);
+    // 初期設定(ファイル一覧取得)
     mfileManager = new FileManager();
-    //gridView.setAdapter(new ArrayAdapter<String>(this));
 
-    // 画像ファイル検索
+    // 画像ファイル設定
     SetupFile();
   }
 
@@ -57,14 +59,14 @@ public class MainActivity extends AppCompatActivity {
    */
   private void SetupFile()
   {
-    // 端末内の画像ファイル取得(URI)
-    //Cursor cursor = mfileManager.GetImageFileUri();
 
     // フォルダパス取得
     ArrayList<String> folderPathList = mfileManager.GetFolderPaths();
 
     // アダプタに登録
-
+    ImageGridViewAdapter adapter = new ImageGridViewAdapter(this,mfileManager.GetImageFilePath(),R.layout.grid_item_image);
+    GridView gridView = (GridView)findViewById(R.id.gridView);
+    gridView.setAdapter(adapter);
   }
 
 
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
   private void CheckPermission()
   {
     // 許可済
-    if(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+    if(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
     {
       StartMain();
     }

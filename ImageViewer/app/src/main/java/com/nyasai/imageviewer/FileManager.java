@@ -33,6 +33,8 @@ public class FileManager {
   Cursor mCursor;
   // フォルダパス一覧
   ArrayList<String> mfolderPathList;
+  // 画像ファイル一覧
+  ArrayList<String> mfilePathList;
 
   /**
    * コンストラクタ
@@ -62,6 +64,10 @@ public class FileManager {
   public Cursor GetImageFileUri()
   {
     return mCursor;
+  }
+  public ArrayList<String> GetImageFilePath()
+  {
+    return mfilePathList;
   }
 
   /**
@@ -154,7 +160,30 @@ public class FileManager {
       cursor.moveToFirst();
 
       mCursor = cursor;
+      SetFilePaths(cursor);
     }
+  }
+
+  public void SetFilePaths(Cursor cursor)
+  {
+    // フォルダパスリスト
+    ArrayList<String > filePathList = new ArrayList<String>();
+    // URI情報の先頭に移動
+    cursor.moveToFirst();
+    int pathIndex = cursor.getColumnIndex(
+        MediaStore.Images.Media.DATA);
+    String folderPath = "";
+    while(!cursor.isAfterLast()){
+      folderPath = cursor.getString(pathIndex);
+      // リストに追加
+      filePathList.add(folderPath);
+      cursor.moveToNext();
+    }
+
+    // 重複削除
+    Set<String> set = new HashSet<>(filePathList);
+    mfilePathList = new ArrayList<>(set);
+
   }
 
 
