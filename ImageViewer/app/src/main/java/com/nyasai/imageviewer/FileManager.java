@@ -41,15 +41,13 @@ public class FileManager {
    */
   public FileManager()
   {
-    // 端末内のファイル一覧，フォルダパスを取得
-    InitFileList();
   }
 
   /**
    * 初期化処理
    * ここでファイル一覧とフォルダパスとフォルダ一覧を取得する
    */
-  public void InitFileList()
+  public void GetAllFileList()
   {
     // 画像ファイル一覧取得
     LoadImageFileUri();
@@ -105,14 +103,19 @@ public class FileManager {
         MediaStore.Images.Media.DATA);
     int nameIndex = cursor.getColumnIndex(
         MediaStore.Images.Media.DISPLAY_NAME);
+    String filePath = "";
     String folderPath = "";
     String regex = "";
+    Pattern pattern;
+    Matcher matcher;
     while(!cursor.isAfterLast()){
-      // パスからファイル名を削除
-      folderPath = cursor.getString(pathIndex);
+      // ファイルパス取得
+      filePath = cursor.getString(pathIndex);
+      // ファイル名取得
       regex = "/"+cursor.getString(nameIndex);
-      Pattern pattern = Pattern.compile(regex);
-      Matcher matcher = pattern.matcher(folderPath);
+      // パスからファイル名を削除
+      pattern = Pattern.compile(regex);
+      matcher = pattern.matcher(filePath);
       folderPath = matcher.replaceFirst("");
       // リストに追加
       folderPathList.add(folderPath);
@@ -165,7 +168,7 @@ public class FileManager {
   }
 
   /**
-   * URI情報からファイルパス一覧を設定
+   * ファイルパス一覧設定(文字列)
    * @param cursor
    */
   public void SetFilePaths(Cursor cursor)
@@ -183,11 +186,57 @@ public class FileManager {
       filePathList.add(folderPath);
       cursor.moveToNext();
     }
+    // 保持
+    mfilePathList = filePathList;
+  }
 
-    // 重複削除
-    Set<String> set = new HashSet<>(filePathList);
-    mfilePathList = new ArrayList<>(set);
+  /**
+   * 代表画像ファイルパス取得
+   * @param cursor
+   * @return
+   */
+  public ArrayList<ImageGridViewAdapter.GridViewItem> GetFilePathForRepresentative(Cursor cursor)
+  {
+    ArrayList<ImageGridViewAdapter.GridViewItem> gridViewItems = new ArrayList<ImageGridViewAdapter.GridViewItem>();
+    HashMap<String,Integer> folderPathList = new HashMap<String,Integer>();
 
+    // URI情報の先頭に移動
+    cursor.moveToFirst();
+    int pathIndex = cursor.getColumnIndex(
+            MediaStore.Images.Media.DATA);
+    int nameIndex = cursor.getColumnIndex(
+            MediaStore.Images.Media.DISPLAY_NAME);
+    String filePath = "";
+    String folderPath = "";
+    // ファイルパス削除用
+    String regex = "";
+    Pattern pattern;
+    Matcher matcher;
+    // ファイル確認
+    while(!cursor.isAfterLast()){
+      // ファイルパス取得
+      filePath = cursor.getString(pathIndex);
+      // ファイル名
+      regex = "/"+cursor.getString(nameIndex);
+      // パスからファイル名を削除
+      pattern = Pattern.compile(regex);
+      matcher = pattern.matcher(filePath);
+      folderPath = matcher.replaceFirst("");
+      // まだ取得していないフォルダパスのファイルなら取得
+      if(folderPathList.containsKey(folderPath) != true)
+      {
+        // マップにフォルダパス追加
+        folderPathList.put(folderPath,1);
+        // リストに追加
+        ImageGridViewAdapter.GridViewItem item = new ImageGridViewAdapter.GridViewItem();
+        item.imagePath = filePath;
+        item.folderPath = folderPath;
+        gridViewItems.add(item);
+      }
+      cursor.moveToNext();
+    }
+
+    return gridViewItems;
   }
 
 
