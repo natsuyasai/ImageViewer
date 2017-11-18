@@ -164,6 +164,10 @@ public class FileManager {
     }
   }
 
+  /**
+   * URI情報からファイルパス一覧を設定
+   * @param cursor
+   */
   public void SetFilePaths(Cursor cursor)
   {
     // フォルダパスリスト
