@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import static com.nyasai.imageviewer.Common.GetBitMapOption;
+
 /**
  * 画像表示グリッドビュー用アダプタ
  */
@@ -24,15 +26,15 @@ public class ImageGridViewAdapter extends BaseAdapter {
   // ビュー登録
   private LayoutInflater mLayoutInflater;
   // 表示データ
-  private ArrayList<String> mItemList;
+  private ArrayList<GridViewItem> mItemList;
   // リソース
   private int mResource = 0;
   /**
    * グリッドビュー表示用
    */
   public static class GridViewItem {
-    public ImageView mImageView;
-    public TextView mTextView;
+    public String imagePath;
+    public String folderPath;
 
   }
 
@@ -40,7 +42,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
    * コンストラクタ
    * @param context
    */
-  public ImageGridViewAdapter(Context context, ArrayList<String> data, int resource) {
+  public ImageGridViewAdapter(Context context, ArrayList<GridViewItem> data, int resource) {
     super();
     this.mContext = context;
     this.mItemList = data;
@@ -87,7 +89,9 @@ public class ImageGridViewAdapter extends BaseAdapter {
   @Override
   public View getView(int i, View convertView, ViewGroup parent) {
     // ファイルパス取得
-    String imageFilePath = mItemList.get(i);
+    GridViewItem gridViewItem = mItemList.get(i);
+    String imageFilePath = gridViewItem.imagePath;
+    String imageFolderPath = gridViewItem.folderPath;
 
     // ビューが空の場合
     if(convertView == null)
@@ -103,21 +107,13 @@ public class ImageGridViewAdapter extends BaseAdapter {
     {
       /// メモリ削減対策
       // ビットマップ設定
-      BitmapFactory.Options bmpOption = new BitmapFactory.Options();
-      // ARGBそれぞれ0~127階調の色を使用
-      bmpOption.inPreferredConfig = Bitmap.Config.ARGB_4444;
-      // 画像を1/20に
-      bmpOption.inSampleSize = 20;
-      // 不要オブジェクトのメモリ解放
-      bmpOption.inPurgeable = true;
-      // 現在の表示メトリクスの取得
-      DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
-      // ビットマップのサイズを現在の表示メトリクスに合わせる
-      bmpOption.inDensity = displayMetrics.densityDpi;
+      BitmapFactory.Options bmpOption = GetBitMapOption(mContext);
       // ビットマップオブジェクトの生成
       Bitmap bitmap = BitmapFactory.decodeFile(imageFilePath,bmpOption);
       imageView.setImageBitmap(bitmap);
-      textView.setText(imageFilePath);
+      // フォルダ名設定
+      String[] folderStr = imageFolderPath.split("/",0);
+      textView.setText(folderStr[folderStr.length - 1]);
     }
 
     return convertView;

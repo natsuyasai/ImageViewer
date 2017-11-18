@@ -47,8 +47,10 @@ public class MainActivity extends AppCompatActivity {
    */
   private void StartMain()
   {
-    // 初期設定(ファイル一覧取得)
+    // 初期設定
     mfileManager = new FileManager();
+    // 端末内の画像ファイル一覧取得
+    mfileManager.GetAllFileList();
 
     // 画像ファイル設定
     SetupFile();
@@ -59,12 +61,10 @@ public class MainActivity extends AppCompatActivity {
    */
   private void SetupFile()
   {
-
-    // フォルダパス取得
-    ArrayList<String> folderPathList = mfileManager.GetFolderPaths();
-
     // アダプタに登録
-    ImageGridViewAdapter adapter = new ImageGridViewAdapter(this,mfileManager.GetImageFilePath(),R.layout.grid_item_image);
+    ImageGridViewAdapter adapter = new ImageGridViewAdapter(this,
+            mfileManager.GetFilePathForRepresentative(mfileManager.GetImageFileUri()),
+            R.layout.grid_item_image);
     GridView gridView = (GridView)findViewById(R.id.gridView);
     gridView.setAdapter(adapter);
   }
