@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -24,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
   private FileManager mfileManager;
   private Context mContext;
-  private ImageGridViewAdapter mImageGridViewAdapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
     // コンテキスト設定
     ContextManager.onCreateApplication(getApplicationContext());
     mContext = ContextManager.GetContext();
+
+    // 画面サイズ保持
+    WindowManager.onCreateApplication(mContext);
+
     // android6.0以上の場合は権限許可チェック
     if(Build.VERSION.SDK_INT >= 23)
       CheckPermission();

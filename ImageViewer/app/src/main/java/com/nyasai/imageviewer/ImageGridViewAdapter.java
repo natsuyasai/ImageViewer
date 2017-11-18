@@ -9,9 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import static com.nyasai.imageviewer.Common.GetBitMapOption;
@@ -102,12 +109,35 @@ public class ImageGridViewAdapter extends BaseAdapter {
     ImageView imageView = (ImageView) convertView.findViewById(R.id.gv_image);
     TextView textView = (TextView) convertView.findViewById(R.id.gv_text);
 
+    // ビューサイズ設定
+    SetGridViewSize(imageView);
+
     // 画像を設定
     if(imageView != null)
     {
+      // 画像サイズ一時取得
+      BitmapFactory.Options preOptions = new BitmapFactory.Options();
+      preOptions.inJustDecodeBounds = true; // Bitmapをロードしない
+      InputStream stream = null;
+      Bitmap preBitmap = null;
+      try {
+        stream = new FileInputStream(imageFilePath);
+        preBitmap = BitmapFactory.decodeStream(stream,null,preOptions);
+      } catch (FileNotFoundException e) {
+        e.printStackTrace();
+      }
+      try {
+        stream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
       /// メモリ削減対策
+      int imageCompSize = (preOptions.outWidth * 4)/WindowManager.GetHeight(); // 画面縮小サイズ計算
       // ビットマップ設定
-      BitmapFactory.Options bmpOption = GetBitMapOption(mContext);
+      BitmapFactory.Options bmpOption = GetBitMapOption(mContext,imageCompSize);
+
+
       // ビットマップオブジェクトの生成
       Bitmap bitmap = BitmapFactory.decodeFile(imageFilePath,bmpOption);
       imageView.setImageBitmap(bitmap);
@@ -117,5 +147,17 @@ public class ImageGridViewAdapter extends BaseAdapter {
     }
 
     return convertView;
+  }
+
+  /**
+   * グリッドビューアイテムのサイズ設定
+   * @param imageView
+   */
+  private void SetGridViewSize(ImageView imageView)
+  {
+    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
+    params.width = WindowManager.GetHeight() / 2;
+    params.height = (WindowManager.GetHeight() / 4) - 10;
+    imageView.setLayoutParams(params);
   }
 }

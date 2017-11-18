@@ -7,7 +7,10 @@ package com.nyasai.imageviewer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.WindowManager;
 
 /**
  * 共通メソッドクラス
@@ -18,14 +21,18 @@ public class Common {
     {
     }
 
-
-    public static BitmapFactory.Options GetBitMapOption(Context context)
+    /**
+     * bitmapオプション設定
+     * @param context
+     * @return
+     */
+    public static BitmapFactory.Options GetBitMapOption(Context context, int imageCompSize)
     {
         BitmapFactory.Options bmpOption = new BitmapFactory.Options();
         // ARGBそれぞれ0~127階調の色を使用
         bmpOption.inPreferredConfig = Bitmap.Config.ARGB_4444;
         // 画像を1/20に
-        bmpOption.inSampleSize = 20;
+        bmpOption.inSampleSize = imageCompSize;
         // 不要オブジェクトのメモリ解放
         bmpOption.inPurgeable = true;
         // 現在の表示メトリクスの取得
@@ -35,4 +42,5 @@ public class Common {
 
         return bmpOption;
     }
+
 }

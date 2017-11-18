@@ -21,7 +21,7 @@ public class ContextManager {
    * コンテキストの取得
    * @param context
    */
-  static void onCreateApplication(Context context)
+  public static void onCreateApplication(Context context)
   {
     instance = new ContextManager(context);
   }
