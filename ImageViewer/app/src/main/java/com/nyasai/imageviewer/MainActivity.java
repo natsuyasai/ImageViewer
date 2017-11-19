@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
   private FileManager mfileManager;
   private Context mContext;
+  private GridViewOperation mGVOeration;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
 
     // 画面サイズ保持
     WindowManager.onCreateApplication(mContext);
+
+    // グリッドビュークリックスナ登録
+    mGVOeration = new GridViewOperation((GridView)findViewById(R.id.gridView));
+    ((GridView) findViewById(R.id.gridView)).setOnItemClickListener(new GridViewOperation((GridView)findViewById(R.id.gridView)));
 
     // android6.0以上の場合は権限許可チェック
     if(Build.VERSION.SDK_INT >= 23)
