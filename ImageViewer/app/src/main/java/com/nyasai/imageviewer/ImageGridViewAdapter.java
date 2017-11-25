@@ -115,22 +115,8 @@ public class ImageGridViewAdapter extends BaseAdapter {
     // 画像を設定
     if(imageView != null)
     {
-      // 画像サイズ一時取得
-      BitmapFactory.Options preOptions = new BitmapFactory.Options();
-      preOptions.inJustDecodeBounds = true; // Bitmapをロードしない
-      InputStream stream = null;
-      Bitmap preBitmap = null;
-      try {
-        stream = new FileInputStream(imageFilePath);
-        preBitmap = BitmapFactory.decodeStream(stream,null,preOptions);
-      } catch (FileNotFoundException e) {
-        e.printStackTrace();
-      }
-      try {
-        stream.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+      // 画像サイズ取得
+      BitmapFactory.Options preOptions = Common.GetBitMapSize(imageFilePath);
 
       /// メモリ削減対策
       int imageCompSize = (preOptions.outWidth * 4)/WindowManager.GetHeight(); // 画面縮小サイズ計算

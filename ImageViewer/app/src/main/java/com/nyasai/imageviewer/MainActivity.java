@@ -57,6 +57,17 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
+   *
+   * @param hasFocus
+   */
+  @Override
+  public void onWindowFocusChanged(boolean hasFocus) {
+    super.onWindowFocusChanged(hasFocus);
+    WindowManager.SetViewWindowsSize(findViewById(R.id.main_activity));
+  }
+
+
+  /**
    * サブアクティビティからの戻り字時
    *
    * @param requestCode

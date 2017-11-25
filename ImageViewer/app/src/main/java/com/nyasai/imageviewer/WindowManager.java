@@ -2,7 +2,9 @@ package com.nyasai.imageviewer;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.support.constraint.ConstraintLayout;
 import android.view.Display;
+import android.view.View;
 
 /**
  * 画面サイズ管理クラス
@@ -15,6 +17,9 @@ public class WindowManager {
   // 画面サイズ
   public static int width;
   public static int height;
+
+  private static int contentWidth;
+  private static int contentHeight;
 
   /**
    * 画面サイズ設定(画面起動時に設定)
@@ -30,6 +35,11 @@ public class WindowManager {
     width = point.x;
     height = point.y;
   }
+  public static void SetViewWindowsSize(View view)
+  {
+    contentWidth = view.getWidth();
+    contentHeight = view.getHeight();
+  }
 
   /**
    * 画面サイズ取得
@@ -42,5 +52,18 @@ public class WindowManager {
   public static int GetHeight()
   {
     return height;
+  }
+
+  /**
+   * 画面サイズ取得（ビューサイズ）
+   * @return
+   */
+  public static int GetContentWidth()
+  {
+    return contentWidth;
+  }
+  public static int GetContentHeight()
+  {
+    return contentHeight;
   }
 }
