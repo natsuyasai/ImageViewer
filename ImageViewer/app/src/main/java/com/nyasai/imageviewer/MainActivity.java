@@ -2,6 +2,7 @@ package com.nyasai.imageviewer;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
@@ -29,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
   private GridViewOperation mGVOeration;
 
   @Override
+  /**
+   * 画面起動時
+   */
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -50,6 +54,21 @@ public class MainActivity extends AppCompatActivity {
       // ファイル一覧取得
       StartMain();
     }
+  }
+
+  /**
+   * サブアクティビティからの戻り字時
+   *
+   * @param requestCode
+   * @param resultCode
+   * @param data
+   */
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    // フォルダ一覧表示
+    SetupFile();
+
   }
 
   /**
@@ -77,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
             R.layout.grid_item_image);
     GridView gridView = (GridView)findViewById(R.id.gridView);
     gridView.setAdapter(adapter);
+
   }
 
 

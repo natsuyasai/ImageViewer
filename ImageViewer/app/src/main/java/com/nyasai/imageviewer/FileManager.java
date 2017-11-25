@@ -9,12 +9,15 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.nyasai.imageviewer.Constants.IMAGE_EXTENSIONS;
 
 /**
  * TODO
@@ -146,7 +149,6 @@ public class FileManager {
 
     if(cursor != null)
     {
-      // デバッグ出力
       if(Constants.DEBUG_MODE)
       {
         cursor.moveToFirst();
@@ -239,5 +241,35 @@ public class FileManager {
     return gridViewItems;
   }
 
+  /**
+   * 指定フォルダ内の画像ファイル一覧取得
+   * @param folderPath
+   * @return
+   */
+  public ArrayList<String> GetAllFile(String folderPath)
+  {
+    File[] files =new File(folderPath).listFiles();
+    ArrayList<String> imageFilePath = new ArrayList<String>();
+
+    // 画像ファイル取得
+    for(int i=0; i< files.length; i++)
+    {
+      // 対象データがファイルの場合
+      if(files[i].isFile())
+      {
+        // 指定拡張子にマッチする場合はファイルパスを取得
+        for(int ext=0; ext<IMAGE_EXTENSIONS.length; ext++)
+        {
+          if( files[i].getName().endsWith(IMAGE_EXTENSIONS[ext].toString()))
+          {
+            imageFilePath.add(files[i].getPath());
+            break;
+          }
+        }
+      }
+    }
+
+    return imageFilePath;
+  }
 
 }

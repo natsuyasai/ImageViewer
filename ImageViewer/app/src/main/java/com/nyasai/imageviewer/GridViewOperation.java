@@ -1,5 +1,6 @@
 package com.nyasai.imageviewer;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -40,8 +41,43 @@ public class GridViewOperation implements AdapterView.OnItemClickListener{
    */
   @Override
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    ImageGridViewAdapter.GridViewItem item = (ImageGridViewAdapter.GridViewItem) parent.getItemAtPosition(position);
-    Log.d("GridViewClick",item.folderPath);
 
+    if(view != null)
+    {
+      // 指定座標のアイテム取得
+      ImageGridViewAdapter.GridViewItem item = (ImageGridViewAdapter.GridViewItem) parent.getItemAtPosition(position);
+      switch (parent.getId())
+      {
+        case R.id.gridView: // メインアクティビティからの呼び出し
+          CreateSubFolderView(item.folderPath);
+          break;
+        case R.id.gridView_sub: //フォルダ単位のサブアクティビティからの呼び出し
+          CreateOneImageView(item.imagePath);
+          break;
+        default:
+          break;
+      }
+    }
+
+  }
+
+  /**
+   * 画像描画用ビュー新規作成(サブアクティビティ生成)
+   * @param subFordlerPath
+   */
+  private void CreateSubFolderView(String subFordlerPath)
+  {
+    // フォルダ単位ビュー遷移
+    Intent intent = new Intent(ContextManager.GetContext(),FolderView.class);
+    intent.putExtra(Constants.FOLDER_PATH,subFordlerPath);
+    ContextManager.GetContext().startActivity(intent);
+  }
+
+  private void CreateOneImageView(String filePath)
+  {
+    // 1ファイルビュー遷移
+    Intent intent = new Intent(ContextManager.GetContext(),OneImageViewActivity.class);
+    intent.putExtra(Constants.FILE_PATH,filePath);
+    ContextManager.GetContext().startActivity(intent);
   }
 }
