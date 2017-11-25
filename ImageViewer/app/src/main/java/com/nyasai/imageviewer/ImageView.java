@@ -5,10 +5,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.WindowDecorActionBar;
 import android.util.AttributeSet;
 import android.view.View;
@@ -84,6 +86,7 @@ public class ImageView extends View
    *
    * @param canvas the canvas on which the background will be drawn
    */
+  @SuppressLint("ResourceAsColor")
   @Override
   protected void onDraw(Canvas canvas) {
     super.onDraw(canvas);
@@ -100,6 +103,7 @@ public class ImageView extends View
         left =WindowManager.GetContentWidth()/2 - mBitmap.getWidth()/2;
       }
       canvas.drawBitmap(mBitmap,left,top,paint);
+      this.setBackgroundColor(R.color.Black);
     }
   }
 
