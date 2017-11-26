@@ -25,9 +25,14 @@ public class MainActivity extends AppCompatActivity {
    */
   private final static int REQUEST_PERMISSION = 1002;
 
+  // ファイルマネージャ
   private FileManager mfileManager;
+  // コンテキスト
   private Context mContext;
+  // グリッドビュー操作
   private GridViewOperation mGVOeration;
+  // プログレスダイアログ
+  private AsyncProgressDialog mProgressDialog;
 
   @Override
   /**
@@ -46,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
     // グリッドビュークリックスナ登録
     mGVOeration = new GridViewOperation((GridView)findViewById(R.id.gridView));
     ((GridView) findViewById(R.id.gridView)).setOnItemClickListener(new GridViewOperation((GridView)findViewById(R.id.gridView)));
+
+    // プログレスダイアログ表示用クラス生成
+    mProgressDialog = new AsyncProgressDialog(this);
 
     // android6.0以上の場合は権限許可チェック
     if(Build.VERSION.SDK_INT >= 23)
@@ -87,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
    */
   private void StartMain()
   {
+    // プログレスバー表示
+    mProgressDialog.execute();
     // 初期設定
     mfileManager = new FileManager();
     // 端末内の画像ファイル一覧取得
@@ -107,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             R.layout.grid_item_image);
     GridView gridView = (GridView)findViewById(R.id.gridView);
     gridView.setAdapter(adapter);
-
+    mProgressDialog.CroseDialog();
   }
 
 
