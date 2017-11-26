@@ -5,13 +5,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.WindowDecorActionBar;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -96,11 +93,11 @@ public class ImageView extends View
       int left=0,top=0;
       if(mBitmap.getWidth() > mBitmap.getHeight())
       {
-        top = WindowManager.GetContentHeight()/2 - mBitmap.getHeight()/2;
+        top = WindowSizeManager.GetContentHeight()/2 - mBitmap.getHeight()/2;
       }
       else
       {
-        left =WindowManager.GetContentWidth()/2 - mBitmap.getWidth()/2;
+        left = WindowSizeManager.GetContentWidth()/2 - mBitmap.getWidth()/2;
       }
       canvas.drawBitmap(mBitmap,left,top,paint);
       this.setBackgroundColor(R.color.DarkGray);
@@ -124,7 +121,7 @@ public class ImageView extends View
     // 画像サイズ取得
     BitmapFactory.Options preOptions = Common.GetBitMapSize(imagePath);
     /// メモリ削減対策
-    int imageCompSize = (preOptions.outWidth * 4)/WindowManager.GetHeight(); // 画面縮小サイズ計算
+    int imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.GetHeight(); // 画面縮小サイズ計算
     //int imageCompSize = -1;
     // ビットマップ設定
     BitmapFactory.Options bmpOption = GetBitMapOption(mContext,imageCompSize);
@@ -135,14 +132,14 @@ public class ImageView extends View
     int width,height;
     if(preOptions.outWidth >= preOptions.outHeight)
     {
-      width = WindowManager.GetContentWidth();
-      int a = (preOptions.outHeight*WindowManager.GetContentWidth())/preOptions.outWidth;
+      width = WindowSizeManager.GetContentWidth();
+      int a = (preOptions.outHeight* WindowSizeManager.GetContentWidth())/preOptions.outWidth;
       height = a;
     }
     else
     {
-      height = WindowManager.GetContentHeight();
-      int a = (preOptions.outWidth*WindowManager.GetContentHeight())/preOptions.outHeight;
+      height = WindowSizeManager.GetContentHeight();
+      int a = (preOptions.outWidth* WindowSizeManager.GetContentHeight())/preOptions.outHeight;
       width = a;
     }
     mBitmap = Bitmap.createScaledBitmap(mBitmap,width,height,true);

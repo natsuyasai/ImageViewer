@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ImageViewer</string>
+    <string name="app_home">Home</string>
 </resources>

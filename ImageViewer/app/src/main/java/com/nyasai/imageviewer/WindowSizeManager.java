@@ -2,17 +2,16 @@ package com.nyasai.imageviewer;
 
 import android.content.Context;
 import android.graphics.Point;
-import android.support.constraint.ConstraintLayout;
 import android.view.Display;
 import android.view.View;
 
 /**
  * 画面サイズ管理クラス
  */
-public class WindowManager {
+public class WindowSizeManager {
 
   // 自インスタンス
-  private static WindowManager instance = null;
+  private static WindowSizeManager instance = null;
 
   // 画面サイズ
   public static int width;
@@ -27,7 +26,7 @@ public class WindowManager {
    */
   public static void onCreateApplication(Context context)
   {
-    instance = new WindowManager();
+    instance = new WindowSizeManager();
     android.view.WindowManager windowManager = (android.view.WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
     Display display = windowManager.getDefaultDisplay();
     Point point = new Point();

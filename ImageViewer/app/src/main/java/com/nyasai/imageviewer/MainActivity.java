@@ -4,19 +4,13 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,12 +33,15 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    // タイトルバー変更
+    setTitle(R.string.app_home);
     // コンテキスト設定
     ContextManager.onCreateApplication(getApplicationContext());
     mContext = ContextManager.GetContext();
 
     // 画面サイズ保持
-    WindowManager.onCreateApplication(mContext);
+    WindowSizeManager.onCreateApplication(mContext);
 
     // グリッドビュークリックスナ登録
     mGVOeration = new GridViewOperation((GridView)findViewById(R.id.gridView));
@@ -66,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onWindowFocusChanged(boolean hasFocus) {
     super.onWindowFocusChanged(hasFocus);
-    WindowManager.SetViewWindowsSize(findViewById(R.id.main_activity));
+    WindowSizeManager.SetViewWindowsSize(findViewById(R.id.main_activity));
   }
 
 

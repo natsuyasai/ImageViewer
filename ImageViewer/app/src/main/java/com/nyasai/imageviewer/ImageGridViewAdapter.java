@@ -1,24 +1,16 @@
 package com.nyasai.imageviewer;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import static com.nyasai.imageviewer.Common.GetBitMapOption;
@@ -119,7 +111,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
       BitmapFactory.Options preOptions = Common.GetBitMapSize(imageFilePath);
 
       /// メモリ削減対策
-      int imageCompSize = (preOptions.outWidth * 4)/WindowManager.GetHeight(); // 画面縮小サイズ計算
+      int imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.GetHeight(); // 画面縮小サイズ計算
       // ビットマップ設定
       BitmapFactory.Options bmpOption = GetBitMapOption(mContext,imageCompSize);
 
@@ -142,8 +134,8 @@ public class ImageGridViewAdapter extends BaseAdapter {
   private void SetGridViewSize(ImageView imageView)
   {
     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
-    params.width = WindowManager.GetHeight() / 2;
-    params.height = (WindowManager.GetHeight() / 4) - 10;
+    params.width = WindowSizeManager.GetHeight() / 2;
+    params.height = (WindowSizeManager.GetHeight() / 4) - 10;
     imageView.setLayoutParams(params);
   }
 }

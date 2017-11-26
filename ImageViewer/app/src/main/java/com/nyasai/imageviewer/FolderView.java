@@ -31,10 +31,19 @@ public class FolderView extends AppCompatActivity {
     // メインアクティビティからの情報取得
     Intent intent = getIntent();
     String folderPath = intent.getStringExtra(Constants.FOLDER_PATH);
+
+    // タイトルバー変更
+    String[] splitStr = folderPath.split("/",0);
+    setTitle(splitStr[splitStr.length - 1]);
+
     // ファイルリスト表示
     SetupFile(folderPath);
   }
 
+  /**
+   * グリッドビューにファイル一覧を設定
+   * @param folderPath
+   */
   private void SetupFile(String folderPath)
   {
     mfileManager = new FileManager();
