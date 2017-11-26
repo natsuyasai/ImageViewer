@@ -31,7 +31,7 @@ public class ImageView extends View
    */
   public ImageView(Context context) {
     super(context);
-    SetInit();
+    SetInit(context);
   }
 
   /**
@@ -41,8 +41,7 @@ public class ImageView extends View
    */
   public ImageView(Context context,String filePath) {
     super(context);
-    SetInit();
-    mContext = context;
+    SetInit(context);
     SetImage(filePath);
   }
 
@@ -53,7 +52,7 @@ public class ImageView extends View
    */
   public ImageView(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
-    SetInit();
+    SetInit(context);
   }
 
   /**
@@ -64,7 +63,7 @@ public class ImageView extends View
    */
   public ImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    SetInit();
+    SetInit(context);
   }
 
 
@@ -78,11 +77,11 @@ public class ImageView extends View
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public ImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
-    SetInit();
+    SetInit(context);
   }
 
   /**
-   * Implement this to do your drawing.
+   * 描画
    *
    * @param canvas the canvas on which the background will be drawn
    */
@@ -93,6 +92,7 @@ public class ImageView extends View
     if(mBitmap != null)
     {
       Paint paint = new Paint();
+      // 画面中央に表示するよう座標を変換
       int left=0,top=0;
       if(mBitmap.getWidth() > mBitmap.getHeight())
       {
@@ -103,15 +103,16 @@ public class ImageView extends View
         left =WindowManager.GetContentWidth()/2 - mBitmap.getWidth()/2;
       }
       canvas.drawBitmap(mBitmap,left,top,paint);
-      this.setBackgroundColor(R.color.Black);
+      this.setBackgroundColor(R.color.DarkGray);
     }
   }
 
   /**
    * 初期設定
    */
-  private void SetInit()
+  private void SetInit(Context context)
   {
+    mContext = context;
   }
 
   /**
