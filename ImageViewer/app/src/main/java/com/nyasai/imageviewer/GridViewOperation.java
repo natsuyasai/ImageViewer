@@ -1,7 +1,9 @@
 package com.nyasai.imageviewer;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.util.Log;
+import android.graphics.Color;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -12,7 +14,7 @@ import android.widget.GridView;
  * note.
  * クリックイベント操作用にOnItemClickListenerインタフェースを実装
  */
-public class GridViewOperation implements AdapterView.OnItemClickListener{
+public class GridViewOperation implements AdapterView.OnItemClickListener, View.OnTouchListener{
 
   private GridView mGridView;
 
@@ -48,7 +50,7 @@ public class GridViewOperation implements AdapterView.OnItemClickListener{
       ImageGridViewAdapter.GridViewItem item = (ImageGridViewAdapter.GridViewItem) parent.getItemAtPosition(position);
       switch (parent.getId())
       {
-        case R.id.gridView: // メインアクティビティからの呼び出し
+        case R.id.gridViewHome: // メインアクティビティからの呼び出し
           CreateSubFolderView(item.folderPath);
           break;
         case R.id.gridView_sub: //フォルダ単位のサブアクティビティからの呼び出し
@@ -79,5 +81,33 @@ public class GridViewOperation implements AdapterView.OnItemClickListener{
     Intent intent = new Intent(ContextManager.GetContext(),OneImageViewActivity.class);
     intent.putExtra(Constants.FILE_PATH,filePath);
     ContextManager.GetContext().startActivity(intent);
+  }
+
+  /**
+   * アイテムタップ時
+   * Called when a touch event is dispatched to a view. This allows listeners to
+   * get a chance to respond before the target view.
+   *
+   * @param v     The view the touch event has been dispatched to.
+   * @param event The MotionEvent object containing full information about
+   *              the event.
+   * @return True if the listener has consumed the event, false otherwise.
+   */
+  @SuppressLint("ResourceAsColor")
+  @Override
+  public boolean onTouch(View v, MotionEvent event) {
+    // タップイベント判別
+    switch (event.getAction())
+    {
+      case MotionEvent.ACTION_DOWN:
+        break;
+      case MotionEvent.ACTION_UP:
+        break;
+      case MotionEvent.ACTION_CANCEL:
+        break;
+      default:
+        break;
+    }
+    return false;
   }
 }

@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
     WindowSizeManager.onCreateApplication(mContext);
 
     // グリッドビュークリックスナ登録
-    mGVOeration = new GridViewOperation((GridView)findViewById(R.id.gridView));
-    ((GridView) findViewById(R.id.gridView)).setOnItemClickListener(new GridViewOperation((GridView)findViewById(R.id.gridView)));
+    mGVOeration = new GridViewOperation((GridView)findViewById(R.id.gridViewHome));
+    ((GridView) findViewById(R.id.gridViewHome)).setOnItemClickListener(mGVOeration);
 
     // android6.0以上の場合は権限許可チェック
     if(Build.VERSION.SDK_INT >= 23)
@@ -57,18 +57,19 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   *
+   * ビュー生成後
    * @param hasFocus
    */
   @Override
   public void onWindowFocusChanged(boolean hasFocus) {
     super.onWindowFocusChanged(hasFocus);
+    // ウィンドウサイズを保持
     WindowSizeManager.SetViewWindowsSize(findViewById(R.id.main_activity));
   }
 
 
   /**
-   * サブアクティビティからの戻り字時
+   * サブアクティビティからの戻り時
    *
    * @param requestCode
    * @param resultCode
@@ -79,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
     super.onActivityResult(requestCode, resultCode, data);
     // フォルダ一覧表示
     SetupFile();
-
   }
 
   /**
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     ImageGridViewAdapter adapter = new ImageGridViewAdapter(this,
             mfileManager.GetFilePathForRepresentative(mfileManager.GetImageFileUri()),
             R.layout.grid_item_image);
-    GridView gridView = (GridView)findViewById(R.id.gridView);
+    GridView gridView = (GridView)findViewById(R.id.gridViewHome);
     gridView.setAdapter(adapter);
   }
 
@@ -166,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
       }
     }
   }
+
   //endregion
 
 
