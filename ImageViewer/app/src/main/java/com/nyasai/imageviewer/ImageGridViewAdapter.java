@@ -168,7 +168,12 @@ public class ImageGridViewAdapter extends BaseAdapter {
           // 画像サイズ取得
           BitmapFactory.Options preOptions = Common.GetBitMapSize(imageFilePath);
           /// メモリ削減対策
-          int imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.GetHeight(); // 画面縮小サイズ計算
+          int imageCompSize;
+          // 画面縮小サイズ計算
+          if(preOptions.outWidth >= preOptions.outHeight)
+            imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.GetHeight();
+          else
+            imageCompSize = (preOptions.outHeight * 4)/ WindowSizeManager.GetWidth();
           // ビットマップ設定
           BitmapFactory.Options bmpOption = GetBitMapOption(mContext,imageCompSize);
           // ビットマップオブジェクトの生成
