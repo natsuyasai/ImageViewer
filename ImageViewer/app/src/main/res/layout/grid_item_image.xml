@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true"
         android:gravity="center_horizontal"
         android:text=""
-        android:textSize="14dp"
+        android:textSize="12dp"
         />
 
 

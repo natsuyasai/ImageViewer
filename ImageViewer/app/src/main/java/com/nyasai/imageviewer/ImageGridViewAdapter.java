@@ -150,6 +150,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
       imageView.setTag(textView.getText());
       imageView.setVisibility(View.INVISIBLE);
 
+      // 非同期読み込み
       AsyncTask<GetViewTaskStartParam,Void,GetViewTaskResulttParam> task = new AsyncTask<GetViewTaskStartParam, Void, GetViewTaskResulttParam>() {
         private ImageView mImageView;
         private String tag;
@@ -205,32 +206,6 @@ public class ImageGridViewAdapter extends BaseAdapter {
 
     return convertView;
   }
-
-  private Runnable runnable = new Runnable() {
-    private String mImageFilePath;
-    private ImageView mImageView;
-
-    public void SetParam(String path, ImageView view)
-    {
-      mImageFilePath = path;
-      mImageView = view;
-    }
-    @Override
-    public void run() {
-      String imageFilePath = mImageFilePath;
-
-      // 画像サイズ取得
-      BitmapFactory.Options preOptions = Common.GetBitMapSize(imageFilePath);
-      /// メモリ削減対策
-      int imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.GetHeight(); // 画面縮小サイズ計算
-      // ビットマップ設定
-      BitmapFactory.Options bmpOption = GetBitMapOption(mContext,imageCompSize);
-      // ビットマップオブジェクトの生成
-      Bitmap bitmap = BitmapFactory.decodeFile(imageFilePath,bmpOption);
-
-      mImageView.setImageBitmap(bitmap);
-    }
-  };
 
   /**
    * グリッドビューアイテムのサイズ設定
