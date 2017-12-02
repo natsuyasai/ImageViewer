@@ -23,6 +23,8 @@ import java.util.ArrayList;
 
 import javax.security.auth.callback.Callback;
 
+import static com.nyasai.imageviewer.Constants.MODE_DEF;
+
 /**
  * 1フォルダ単位の画像一覧描画用ビュー
  */
@@ -43,13 +45,13 @@ public class FolderView extends AppCompatActivity implements Callback{
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_folder_view);
 
-    // グリッドビュークリックスナ登録
-    mGVOeration = new GridViewOperation((GridView)findViewById(R.id.gridView_sub));
-    ((GridView) findViewById(R.id.gridView_sub)).setOnItemClickListener(mGVOeration);
-
     // メインアクティビティからの情報取得
     Intent intent = getIntent();
     mFolderPath = intent.getStringExtra(Constants.FOLDER_PATH);
+
+    // グリッドビュークリックスナ登録
+    mGVOeration = new GridViewOperation((GridView)findViewById(R.id.gridView_sub),intent.getIntExtra(Constants.MODE,0));
+    ((GridView) findViewById(R.id.gridView_sub)).setOnItemClickListener(mGVOeration);
 
     // タイトルバー変更
     String[] splitStr = mFolderPath.split("/",0);

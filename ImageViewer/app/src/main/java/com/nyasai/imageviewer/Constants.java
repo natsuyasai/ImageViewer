@@ -12,8 +12,15 @@ public final class Constants {
   public static final String FILE_PATH = "FILE_PATH";
   // サブアクティビティ起動時タグ(フォルダパス)
   public static final String FOLDER_PATH = "FOLDER_PATH";
+  // モード
+  public static final String MODE = "MODE";
   // 画像ファイル拡張子
   public static final String[] IMAGE_EXTENSIONS={".jpg",".jpeg",".png",".bmp",".gif","tiff","tif"};
+
+  // 通常起動
+  public static final int MODE_DEF = 0;
+  // 暗黙的インテントによる起動
+  public static final int MODE_IMPLICIT_INTENT = 1;
 
 
 }

@@ -18,6 +18,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import static com.nyasai.imageviewer.Constants.MODE_DEF;
+import static com.nyasai.imageviewer.Constants.MODE_IMPLICIT_INTENT;
+
 public class MainActivity extends AppCompatActivity {
 
   /***
@@ -49,8 +52,13 @@ public class MainActivity extends AppCompatActivity {
     // 画面サイズ保持
     WindowSizeManager.onCreateApplication(mContext);
 
+    // インテント受取
+    Intent intent = getIntent();
     // グリッドビュークリックスナ登録
-    mGVOeration = new GridViewOperation((GridView)findViewById(R.id.gridViewHome));
+    if(intent.getAction().equals("android.intent.action.MAIN"))
+      mGVOeration = new GridViewOperation((GridView)findViewById(R.id.gridViewHome),MODE_DEF);
+    else
+      mGVOeration = new GridViewOperation((GridView)findViewById(R.id.gridViewHome),MODE_IMPLICIT_INTENT);
     ((GridView) findViewById(R.id.gridViewHome)).setOnItemClickListener(mGVOeration);
 
     // android6.0以上の場合は権限許可チェック

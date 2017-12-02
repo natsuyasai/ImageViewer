@@ -4,10 +4,17 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+
+import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+
+import static com.nyasai.imageviewer.Constants.MODE_DEF;
 
 /**
  * グリッドビュー操作クラス
@@ -18,13 +25,15 @@ import android.widget.GridView;
 public class GridViewOperation implements AdapterView.OnItemClickListener, View.OnTouchListener{
 
   private GridView mGridView;
+  private int mMode; // 動作モード(0:通常起動,1:暗黙インテントによる起動)
 
   /**
    * コンストラクタ
    */
-  public GridViewOperation(GridView gridView)
+  public GridViewOperation(GridView gridView,int mode)
   {
     mGridView = gridView;
+    mMode = mode;
   }
 
 
@@ -55,7 +64,9 @@ public class GridViewOperation implements AdapterView.OnItemClickListener, View.
           CreateSubFolderView(item.folderPath);
           break;
         case R.id.gridView_sub: //フォルダ単位のサブアクティビティからの呼び出し
-          CreateOneImageView(item.imagePath);
+          if(mMode == Constants.MODE_DEF)
+            CreateOneImageView(item.imagePath);
+         // この時，呼び出し元にファイルパスを返す
           break;
         default:
           break;
@@ -72,7 +83,8 @@ public class GridViewOperation implements AdapterView.OnItemClickListener, View.
   {
     // フォルダ単位ビュー遷移
     Intent intent = new Intent(ContextManager.GetContext(),FolderView.class);
-    intent.putExtra(Constants.FOLDER_PATH,subFordlerPath);
+    intent.putExtra(Constants.FOLDER_PATH, subFordlerPath);
+    intent.putExtra(Constants.MODE, mMode);
     ContextManager.GetContext().startActivity(intent);
   }
 
