@@ -15,4 +15,5 @@ public final class Constants {
   // 画像ファイル拡張子
   public static final String[] IMAGE_EXTENSIONS={".jpg",".jpeg",".png",".bmp",".gif","tiff","tif"};
 
+
 }

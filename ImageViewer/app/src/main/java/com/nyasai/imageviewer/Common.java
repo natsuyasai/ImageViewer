@@ -44,7 +44,7 @@ public class Common {
         // 現在の表示メトリクスの取得
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         // ビットマップのサイズを現在の表示メトリクスに合わせる
-        bmpOption.inDensity = displayMetrics.densityDpi-10;
+        bmpOption.inDensity = displayMetrics.densityDpi;
 
         return bmpOption;
     }

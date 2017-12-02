@@ -3,6 +3,7 @@ package com.nyasai.imageviewer;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -268,7 +269,6 @@ public class FileManager {
         }
       }
     }
-
     return imageFilePath;
   }
 

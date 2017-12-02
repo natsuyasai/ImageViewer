@@ -4,13 +4,19 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.GridView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -89,21 +95,33 @@ public class MainActivity extends AppCompatActivity {
   {
     // 初期設定
     mfileManager = new FileManager();
-    // 端末内の画像ファイル一覧取得
-    mfileManager.GetAllFileList();
 
-    // 画像ファイル設定
-    SetupFile();
+    // 端末内の画像ファイル一覧を取得し，グリッドビューに設定
+    (new Thread(runnable)).start();
   }
+
+  private Runnable runnable = new Runnable() {
+    @Override
+    public void run() {
+      // 取得
+      MainActivity.this.mfileManager.GetAllFileList();
+      // 設定
+      MainActivity.this.SetupFile();
+    }
+  };
 
   /***
    * ファイル検索開始
    */
+  private ArrayList<ImageGridViewAdapter.GridViewItem> mGridViewData;
   private void SetupFile()
   {
+    // フォルダごとに一番はじめに見つかったファイルパスを取得
+    if(mGridViewData == null)
+      mGridViewData = mfileManager.GetFilePathForRepresentative(mfileManager.GetImageFileUri());
     // アダプタに登録
     ImageGridViewAdapter adapter = new ImageGridViewAdapter(this,
-            mfileManager.GetFilePathForRepresentative(mfileManager.GetImageFileUri()),
+            mGridViewData,
             R.layout.grid_item_image);
     GridView gridView = (GridView)findViewById(R.id.gridViewHome);
     gridView.setAdapter(adapter);
