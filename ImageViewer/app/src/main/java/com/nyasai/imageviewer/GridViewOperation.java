@@ -3,18 +3,12 @@ package com.nyasai.imageviewer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
-
-import static com.nyasai.imageviewer.Constants.MODE_DEF;
+import static com.nyasai.imageviewer.Constants.REQ_CODE_SUB_ACT;
 
 /**
  * グリッドビュー操作クラス
@@ -26,12 +20,16 @@ public class GridViewOperation implements AdapterView.OnItemClickListener, View.
 
   private GridView mGridView;
   private int mMode; // 動作モード(0:通常起動,1:暗黙インテントによる起動)
+  private ImplicitEventNotifycate mNotifycate;
+  private Activity mActivity;
 
   /**
    * コンストラクタ
    */
-  public GridViewOperation(GridView gridView,int mode)
+  public GridViewOperation(Activity activity, ImplicitEventNotifycate notifycate , GridView gridView, int mode)
   {
+    mActivity = activity;
+    mNotifycate = notifycate;
     mGridView = gridView;
     mMode = mode;
   }
@@ -66,7 +64,12 @@ public class GridViewOperation implements AdapterView.OnItemClickListener, View.
         case R.id.gridView_sub: //フォルダ単位のサブアクティビティからの呼び出し
           if(mMode == Constants.MODE_DEF)
             CreateOneImageView(item.imagePath);
-         // この時，呼び出し元にファイルパスを返す
+          else
+          {
+            // メインアクティビティにメッセージ送信
+            if(mNotifycate != null)
+              mNotifycate.SendImplicitIntentEvent(item.imagePath);
+          }
           break;
         default:
           break;
@@ -85,7 +88,8 @@ public class GridViewOperation implements AdapterView.OnItemClickListener, View.
     Intent intent = new Intent(ContextManager.GetContext(),FolderView.class);
     intent.putExtra(Constants.FOLDER_PATH, subFordlerPath);
     intent.putExtra(Constants.MODE, mMode);
-    ContextManager.GetContext().startActivity(intent);
+    //ContextManager.GetContext().startActivity(intent);
+    mActivity.startActivityForResult(intent,REQ_CODE_SUB_ACT);
   }
 
   private void CreateOneImageView(String filePath)

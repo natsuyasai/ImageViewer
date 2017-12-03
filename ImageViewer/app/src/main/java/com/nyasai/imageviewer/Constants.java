@@ -14,6 +14,8 @@ public final class Constants {
   public static final String FOLDER_PATH = "FOLDER_PATH";
   // モード
   public static final String MODE = "MODE";
+  // リクエストコード
+  public static final int REQ_CODE_SUB_ACT = 10;
   // 画像ファイル拡張子
   public static final String[] IMAGE_EXTENSIONS={".jpg",".jpeg",".png",".bmp",".gif","tiff","tif"};
 

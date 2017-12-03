@@ -1,21 +1,22 @@
 package com.nyasai.imageviewer;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.GridView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import static com.nyasai.imageviewer.Constants.MODE_DEF;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
   private Context mContext;
   // グリッドビュー操作
   private GridViewOperation mGVOeration;
+  // モード
+  private int mNowMode;
 
   @Override
   /**
@@ -55,11 +58,15 @@ public class MainActivity extends AppCompatActivity {
     // インテント受取
     Intent intent = getIntent();
     // グリッドビュークリックスナ登録
-    if(intent.getAction().equals("android.intent.action.MAIN"))
-      mGVOeration = new GridViewOperation((GridView)findViewById(R.id.gridViewHome),MODE_DEF);
-    else
-      mGVOeration = new GridViewOperation((GridView)findViewById(R.id.gridViewHome),MODE_IMPLICIT_INTENT);
-    ((GridView) findViewById(R.id.gridViewHome)).setOnItemClickListener(mGVOeration);
+    if(intent.getAction().equals("android.intent.action.MAIN")) {
+      mGVOeration = new GridViewOperation(this, null, (GridView) findViewById(R.id.gridViewHome), MODE_DEF);
+      mNowMode = MODE_DEF;
+    }
+    else {
+      mGVOeration = new GridViewOperation(this,null,(GridView) findViewById(R.id.gridViewHome), MODE_IMPLICIT_INTENT);
+      mNowMode = MODE_IMPLICIT_INTENT;
+    }
+      ((GridView) findViewById(R.id.gridViewHome)).setOnItemClickListener(mGVOeration);
 
     // android6.0以上の場合は権限許可チェック
     if(Build.VERSION.SDK_INT >= 23)
@@ -92,8 +99,21 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    // フォルダ一覧表示
-    SetupFile();
+    if (data == null) {
+      // フォルダ一覧表示
+      SetupFile();
+    }
+    else
+    {
+      String path = data.getStringExtra("SubSctivity");
+      Uri uri = Uri.fromFile(new File(path));
+      //Intent reslt = new Intent(Intent.ACTION_PICK_ACTIVITY, Uri.parse(uri.toString()));
+      Intent reslt = new Intent();
+      //reslt.setType("image/*");
+      reslt.putExtra(MediaStore.EXTRA_OUTPUT,uri);
+      setResult(Activity.RESULT_OK,reslt);
+      finish();
+    }
   }
 
   /**
@@ -192,7 +212,6 @@ public class MainActivity extends AppCompatActivity {
       }
     }
   }
-
   //endregion
 
 

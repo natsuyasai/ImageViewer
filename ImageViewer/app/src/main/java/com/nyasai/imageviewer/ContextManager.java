@@ -1,6 +1,8 @@
 package com.nyasai.imageviewer;
 
+import android.app.Activity;
 import android.content.Context;
+import android.widget.ProgressBar;
 
 /**
  * 自アプリケーションコンテキスト管理クラス
@@ -14,7 +16,7 @@ public class ContextManager {
   /**
    *
    */
-  private static Context m_AppContext;
+  private static Context mAppContext;
 
   /**
    * アプリ起動時
@@ -31,7 +33,7 @@ public class ContextManager {
    * @param context
    */
   private ContextManager(Context context) {
-    this.m_AppContext = context;
+    this.mAppContext = context;
   }
 
 
@@ -44,8 +46,9 @@ public class ContextManager {
   }
 
   public static Context GetContext(){
-    return m_AppContext.getApplicationContext();
+    return mAppContext.getApplicationContext();
   }
+
 
 
 }

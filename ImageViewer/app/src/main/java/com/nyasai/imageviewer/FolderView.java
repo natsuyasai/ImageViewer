@@ -1,34 +1,22 @@
 package com.nyasai.imageviewer;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
-import android.support.constraint.ConstraintLayout;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.telecom.Call;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.Window;
 import android.widget.GridView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import java.io.File;
-import java.lang.reflect.Parameter;
-import java.security.Policy;
 import java.util.ArrayList;
 
 import javax.security.auth.callback.Callback;
 
-import static com.nyasai.imageviewer.Constants.MODE_DEF;
-
 /**
  * 1フォルダ単位の画像一覧描画用ビュー
  */
-public class FolderView extends AppCompatActivity implements Callback{
+public class FolderView extends AppCompatActivity implements Callback ,ImplicitIntentEventListener {
+
 
   // タスク用パラメータ
   public class FolderViewAsyncParams{
@@ -39,6 +27,7 @@ public class FolderView extends AppCompatActivity implements Callback{
   private FileManager mfileManager;
   private GridViewOperation mGVOeration;
   private String mFolderPath;
+  private ImplicitEventNotifycate mIntentNotifycate;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +38,13 @@ public class FolderView extends AppCompatActivity implements Callback{
     Intent intent = getIntent();
     mFolderPath = intent.getStringExtra(Constants.FOLDER_PATH);
 
+    // イベント通知取得設定
+    mIntentNotifycate = new ImplicitEventNotifycate();
+    mIntentNotifycate.SetImplicitIntentListener(this);
+
+
     // グリッドビュークリックスナ登録
-    mGVOeration = new GridViewOperation((GridView)findViewById(R.id.gridView_sub),intent.getIntExtra(Constants.MODE,0));
+    mGVOeration = new GridViewOperation(this,mIntentNotifycate,(GridView)findViewById(R.id.gridView_sub),intent.getIntExtra(Constants.MODE,0));
     ((GridView) findViewById(R.id.gridView_sub)).setOnItemClickListener(mGVOeration);
 
     // タイトルバー変更
@@ -112,5 +106,18 @@ public class FolderView extends AppCompatActivity implements Callback{
         R.layout.grid_item_image);
     GridView gridView = (GridView)findViewById(R.id.gridView_sub);
     gridView.setAdapter(adapter);
+  }
+
+  /**
+   * インテントリターン設定
+   *
+   * @param object
+   */
+  @Override
+  public void ReturnIntentEvent(Object object) {
+    Intent reslt = new Intent();
+    reslt.putExtra("SubSctivity",(String)object);
+    setResult(Activity.RESULT_OK,reslt);
+    finish();
   }
 }
