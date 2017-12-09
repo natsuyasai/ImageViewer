@@ -17,13 +17,6 @@ import javax.security.auth.callback.Callback;
  */
 public class FolderView extends AppCompatActivity implements Callback ,ImplicitIntentEventListener {
 
-
-  // タスク用パラメータ
-  public class FolderViewAsyncParams{
-    public String path;  // フォルダパス
-    public Object obj; // クラスオブジェクト
-  }
-
   private FileManager mfileManager;
   private GridViewOperation mGVOeration;
   private String mFolderPath;
@@ -99,6 +92,9 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
       gridViewItem.folderPath = gridViewItem.imagePath;
       gridViewItems.add(gridViewItem);
     }
+
+    // ファイルパスリストを設定
+    mGVOeration.SetFilePathList(filePath);
 
     // グリッドビューに設定
     ImageGridViewAdapter adapter = new ImageGridViewAdapter(ContextManager.GetContext(),

@@ -7,17 +7,8 @@
     android:layout_height="match_parent"
     android:background="@color/DarkGray"
     android:id="@+id/one_image_view"
+    android:layout_gravity="center"
     tools:context="com.nyasai.imageviewer.OneImageViewActivity">
-
-    <View
-        android:id="@+id/one_imgae_view"
-        class="com.nyasai.imageviewer.ImageView"
-        android:background="@color/DarkGray"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal"
-        />
 
 
 </android.support.constraint.ConstraintLayout>

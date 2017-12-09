@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     // 画面サイズ保持
     WindowSizeManager.onCreateApplication(mContext);
+    WindowSizeManager.SetViewAllWindowsSize(getWindowManager().getDefaultDisplay());
 
     // インテント受取
     Intent intent = getIntent();

@@ -17,7 +17,7 @@ import static com.nyasai.imageviewer.Common.GetBitMapOption;
 /**
  * 画像描画用ビュー
  */
-public class ImageView extends View
+public class MyImageView extends View
 {
   private Context mContext;
   private Bitmap mBitmap;
@@ -26,7 +26,7 @@ public class ImageView extends View
    * コンストラクタ
    * @param context
    */
-  public ImageView(Context context) {
+  public MyImageView(Context context) {
     super(context);
     SetInit(context);
   }
@@ -36,7 +36,7 @@ public class ImageView extends View
    * @param context
    * @param filePath
    */
-  public ImageView(Context context,String filePath) {
+  public MyImageView(Context context, String filePath) {
     super(context);
     SetInit(context);
     SetImage(filePath);
@@ -47,7 +47,7 @@ public class ImageView extends View
    * @param context
    * @param attrs
    */
-  public ImageView(Context context, @Nullable AttributeSet attrs) {
+  public MyImageView(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
     SetInit(context);
   }
@@ -58,7 +58,7 @@ public class ImageView extends View
    * @param attrs
    * @param defStyleAttr
    */
-  public ImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+  public MyImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     SetInit(context);
   }
@@ -72,7 +72,7 @@ public class ImageView extends View
    * @param defStyleRes
    */
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  public ImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+  public MyImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     SetInit(context);
   }
@@ -99,7 +99,10 @@ public class ImageView extends View
       {
         left = WindowSizeManager.GetContentWidth()/2 - mBitmap.getWidth()/2;
       }
-      canvas.drawBitmap(mBitmap,left,top,paint);
+      int navigationsize = WindowSizeManager.GetHeight()-WindowSizeManager.GetContentAllHeight();
+      if(navigationsize == 0)
+        navigationsize = 70;
+      canvas.drawBitmap(mBitmap,left,top+navigationsize,paint);
       this.setBackgroundColor(R.color.DarkGray);
     }
   }

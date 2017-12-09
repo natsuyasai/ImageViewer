@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import java.util.ArrayList;
+
 import static com.nyasai.imageviewer.Constants.REQ_CODE_SUB_ACT;
 
 /**
@@ -22,6 +24,7 @@ public class GridViewOperation implements AdapterView.OnItemClickListener, View.
   private int mMode; // 動作モード(0:通常起動,1:暗黙インテントによる起動)
   private ImplicitEventNotifycate mNotifycate;
   private Activity mActivity;
+  private ArrayList<String> mFilePathList;
 
   /**
    * コンストラクタ
@@ -32,6 +35,14 @@ public class GridViewOperation implements AdapterView.OnItemClickListener, View.
     mNotifycate = notifycate;
     mGridView = gridView;
     mMode = mode;
+  }
+
+  /**
+   * グリッドビューのファイルパスリスト設定
+   */
+  public void SetFilePathList(ArrayList<String> list)
+  {
+    mFilePathList = list;
   }
 
 
@@ -95,9 +106,12 @@ public class GridViewOperation implements AdapterView.OnItemClickListener, View.
   private void CreateOneImageView(String filePath)
   {
     // 1ファイルビュー遷移
-    Intent intent = new Intent(ContextManager.GetContext(),OneImageViewActivity.class);
-    intent.putExtra(Constants.FILE_PATH,filePath);
-    ContextManager.GetContext().startActivity(intent);
+    if(mFilePathList != null) {
+      Intent intent = new Intent(ContextManager.GetContext(), OneImageViewActivity.class);
+      intent.putExtra(Constants.FILE_PATH, filePath);
+      intent.putStringArrayListExtra(Constants.FILE_PATH_LIST, mFilePathList);
+      ContextManager.GetContext().startActivity(intent);
+    }
   }
 
   /**

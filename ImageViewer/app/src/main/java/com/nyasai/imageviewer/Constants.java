@@ -10,6 +10,8 @@ public final class Constants {
 
   // サブアクティビティ起動時タグ(ファイルパス)
   public static final String FILE_PATH = "FILE_PATH";
+  // サブアクティビティ起動時タグ(ファイルパスリスト)
+  public static final String FILE_PATH_LIST = "FILE_PATH_LIST";
   // サブアクティビティ起動時タグ(フォルダパス)
   public static final String FOLDER_PATH = "FOLDER_PATH";
   // モード

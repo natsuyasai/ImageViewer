@@ -1,5 +1,6 @@
 package com.nyasai.imageviewer;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.view.Display;
@@ -17,6 +18,10 @@ public class WindowSizeManager {
   public static int width;
   public static int height;
 
+  // ナビゲーショバー込み
+  private static int contentAllWidth;
+  private static int contentAllHeight;
+  // ビュー本体のみ
   private static int contentWidth;
   private static int contentHeight;
 
@@ -30,9 +35,16 @@ public class WindowSizeManager {
     android.view.WindowManager windowManager = (android.view.WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
     Display display = windowManager.getDefaultDisplay();
     Point point = new Point();
-    display.getSize(point);
+    display.getRealSize(point);
     width = point.x;
     height = point.y;
+  }
+  public static void SetViewAllWindowsSize(Display display)
+  {
+    Point point = new Point();
+    display.getSize(point);
+    contentAllWidth = point.x;
+    contentAllHeight = point.y;
   }
   public static void SetViewWindowsSize(View view)
   {
@@ -51,6 +63,19 @@ public class WindowSizeManager {
   public static int GetHeight()
   {
     return height;
+  }
+
+  /**
+   * 画面サイズ取得（タイトルバー抜きビューサイズ）
+   * @return
+   */
+  public static int GetContentAllWidth()
+  {
+    return contentAllWidth;
+  }
+  public static int GetContentAllHeight()
+  {
+    return contentAllHeight;
   }
 
   /**
