@@ -33,16 +33,19 @@ public class OneImageViewActivity extends AppCompatActivity {
     Intent intent = getIntent();
     String filePath = intent.getStringExtra(Constants.FILE_PATH);
 
+    /*
     // タイトル設定
     String[] splitStr = filePath.split("/",0);
     setTitle(splitStr[splitStr.length - 1]);
+    */
     // ナビゲーションバー非表示
-    //requestWindowFeature(Window.FEATURE_NO_TITLE);
     if (Build.VERSION.SDK_INT >= 19) {
       Window window = getWindow();
       View view = window.getDecorView();
       view.setSystemUiVisibility(
-          View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY|View.SYSTEM_UI_FLAG_FULLSCREEN);
+          View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
+              View.SYSTEM_UI_FLAG_FULLSCREEN |
+              View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
     // ビューに画像描画

@@ -3,7 +3,9 @@ package com.nyasai.imageviewer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
+
+import java.io.File;
 import java.util.ArrayList;
 
 import static com.nyasai.imageviewer.Common.GetBitMapOption;
@@ -112,6 +119,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
     GridViewItem gridViewItem = mItemList.get(i);
     String imageFilePath = gridViewItem.imagePath;
     String imageFolderPath = gridViewItem.folderPath;
+    File imageFile = new File(imageFilePath);
     String[] splitStr = imageFolderPath.split("/",0); // ファイル名リスト
 
     ViewHolder holder;
@@ -145,70 +153,92 @@ public class ImageGridViewAdapter extends BaseAdapter {
     {
       // テキストビュー設定
       textView.setText(splitStr[splitStr.length - 1]);
-      // イメージビューのタグ設定
-      // note.非同期で設定する画像オブジェクトが正しい箇所に表示されるよう
-      imageView.setTag(textView.getText());
-      imageView.setVisibility(View.INVISIBLE);
 
+      // 画像設定
+      Picasso.Builder builder = new Picasso.Builder(mContext);
+      // エラー発生時，エラー内容を表示させる
+      builder.listener(new Picasso.Listener() {
+        @Override
+        public void onImageLoadFailed(Picasso picasso, Uri uri, Exception e) {
+          Log.d("getView",e.toString());
+        }
+      });
+      // リサイズ値取得
+      BitmapFactory.Options preOptions = Common.GetBitMapSize(imageFilePath);
+      int resizeVal = GetResizeValue(preOptions);
+      if(resizeVal != 0) {
+        // 画像の読み込み，設定
+        builder.build()
+            .load(imageFile)
+            .resize(preOptions.outWidth / resizeVal, preOptions.outHeight / resizeVal)
+            .into(imageView, new Callback() {
+              @Override
+              public void onSuccess() {
+                Log.d("getView", "Success");
+              }
+              @Override
+              public void onError() {
+                Log.d("getView", "Error");
+              }
+            });
+      }
       // 非同期読み込み
-      AsyncTask<GetViewTaskStartParam,Void,GetViewTaskResulttParam> task = new AsyncTask<GetViewTaskStartParam, Void, GetViewTaskResulttParam>() {
-        private ImageView mImageView;
-        private String tag;
-
-
-        @Override
-        protected GetViewTaskResulttParam doInBackground(GetViewTaskStartParam... getViewTaslStartParams) {
-          GetViewTaskResulttParam reslt = new GetViewTaskResulttParam();
-          String imageFilePath = getViewTaslStartParams[0].imageFilePath;
-
-          // 設定先のビュー指定
-          mImageView = getViewTaslStartParams[0].viewHolder.imageView;
-          tag = mImageView.getTag().toString();
-
-          // 画像サイズ取得
-          BitmapFactory.Options preOptions = Common.GetBitMapSize(imageFilePath);
-          /// メモリ削減対策
-          int imageCompSize;
-          // 画面縮小サイズ計算
-          if(preOptions.outWidth >= preOptions.outHeight)
-            imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.GetHeight();
-          else
-            imageCompSize = (preOptions.outHeight * 4)/ WindowSizeManager.GetWidth();
-          // ビットマップ設定
-          BitmapFactory.Options bmpOption = GetBitMapOption(mContext,imageCompSize);
-          // ビットマップオブジェクトの生成
-          reslt.bitmap = BitmapFactory.decodeFile(imageFilePath,bmpOption);
-
-          reslt.holder = getViewTaslStartParams[0].viewHolder;
-          return reslt;
-        }
-
-        /**
-         *
-         */
-        @Override
-        protected void onPostExecute(GetViewTaskResulttParam getViewTaskResulttParam) {
-          super.onPostExecute(getViewTaskResulttParam);
-          if(getViewTaskResulttParam != null)
-          {
-            // イメージの設定
-            if(tag.equals(mImageView.getTag()))
-            {
-              mImageView.setImageBitmap(getViewTaskResulttParam.bitmap);
-              mImageView.setVisibility(View.VISIBLE);
-            }
-          }
-        }
-      };
-      // パラメータ設定
-      GetViewTaskStartParam param = new GetViewTaskStartParam();
-      param.imageFilePath = imageFilePath;
-      param.viewHolder = new ViewHolder();
-      param.viewHolder.imageView = imageView;
-      task.execute(param);
-
+//      AsyncTask<GetViewTaskStartParam,Void,GetViewTaskResulttParam> task = new AsyncTask<GetViewTaskStartParam, Void, GetViewTaskResulttParam>() {
+//        private ImageView mImageView;
+//        private String tag;
+//
+//
+//        @Override
+//        protected GetViewTaskResulttParam doInBackground(GetViewTaskStartParam... getViewTaslStartParams) {
+//          GetViewTaskResulttParam reslt = new GetViewTaskResulttParam();
+//          String imageFilePath = getViewTaslStartParams[0].imageFilePath;
+//
+//          // 設定先のビュー指定
+//          mImageView = getViewTaslStartParams[0].viewHolder.imageView;
+//          tag = mImageView.getTag().toString();
+//
+//          // 画像サイズ取得
+//          BitmapFactory.Options preOptions = Common.GetBitMapSize(imageFilePath);
+//          /// メモリ削減対策
+//          int imageCompSize;
+//          // 画面縮小サイズ計算
+//          if(preOptions.outWidth >= preOptions.outHeight)
+//            imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.GetHeight();
+//          else
+//            imageCompSize = (preOptions.outHeight * 4)/ WindowSizeManager.GetWidth();
+//          // ビットマップ設定
+//          BitmapFactory.Options bmpOption = GetBitMapOption(mContext,imageCompSize);
+//          // ビットマップオブジェクトの生成
+//          reslt.bitmap = BitmapFactory.decodeFile(imageFilePath,bmpOption);
+//
+//          reslt.holder = getViewTaslStartParams[0].viewHolder;
+//          return reslt;
+//        }
+//
+//        /**
+//         *
+//         */
+//        @Override
+//        protected void onPostExecute(GetViewTaskResulttParam getViewTaskResulttParam) {
+//          super.onPostExecute(getViewTaskResulttParam);
+//          if(getViewTaskResulttParam != null)
+//          {
+//            // イメージの設定
+//            if(tag.equals(mImageView.getTag()))
+//            {
+//              mImageView.setImageBitmap(getViewTaskResulttParam.bitmap);
+//              mImageView.setVisibility(View.VISIBLE);
+//            }
+//          }
+//        }
+//      };
+//      // パラメータ設定
+//      GetViewTaskStartParam param = new GetViewTaskStartParam();
+//      param.imageFilePath = imageFilePath;
+//      param.viewHolder = new ViewHolder();
+//      param.viewHolder.imageView = imageView;
+//      task.execute(param);
     }
-
     return convertView;
   }
 
@@ -223,4 +253,23 @@ public class ImageGridViewAdapter extends BaseAdapter {
     params.height = (WindowSizeManager.GetHeight() / 4) - 10;
     imageView.setLayoutParams(params);
   }
+
+  /**
+   * 画像リサイズ値取得
+   * @param preOptions
+   * @return
+   */
+  private int GetResizeValue(BitmapFactory.Options preOptions)
+  {
+    /// メモリ削減対策
+    int imageCompSize;
+    // 画面縮小サイズ計算
+    if(preOptions.outWidth >= preOptions.outHeight)
+      imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.GetHeight();
+    else
+      imageCompSize = (preOptions.outHeight * 4)/ WindowSizeManager.GetWidth();
+
+    return imageCompSize;
+  }
+
 }

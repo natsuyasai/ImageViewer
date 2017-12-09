@@ -158,8 +158,8 @@ public class FileManager {
         int nameIndex = cursor.getColumnIndex(
             MediaStore.Images.Media.DISPLAY_NAME);
         while(!cursor.isAfterLast()){
-          Log.d("TEST","画像パス = " + cursor.getString(pathIndex));
-          Log.d("TEST","画像名 = " + cursor.getString(nameIndex));
+          Log.d("LoadImageFileUri","Image Path = " + cursor.getString(pathIndex));
+          Log.d("LoadImageFileUri","Image Name = " + cursor.getString(nameIndex));
           cursor.moveToNext();
         }
       }
