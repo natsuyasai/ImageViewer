@@ -25,12 +25,18 @@ import java.util.ArrayList;
  */
 public class OneImageViewActivity extends AppCompatActivity {
 
+  // イメージビュー
   private MyImageView mImageView;
+  // 現表示ファイルと同一フォルダのファイルパス一覧
   private ArrayList<String> mFilePathList;
-  private GestureDetector mGestureDetector;
-  private ConstraintLayout mLayout;
-  private Context mContext;
+  // 現表示ファイル
   private int mNowPosition;
+  // 画面タップイベント
+  private GestureDetector mGestureDetector;
+  // レイアウト
+  private ConstraintLayout mLayout;
+  // コンテキスト
+  private Context mContext;
   // スワイプイベント閾値（速度）
   private final int SWAIP_X_SPEED_ABS_TH = 2500;
   // スワイプイベント閾値（移動量）

@@ -17,9 +17,13 @@ import javax.security.auth.callback.Callback;
  */
 public class FolderView extends AppCompatActivity implements Callback ,ImplicitIntentEventListener {
 
+  // ファイルマネージャ
   private FileManager mfileManager;
+  // グリッドビュー操作用
   private GridViewOperation mGVOeration;
+  // 現表示中フォルダパス
   private String mFolderPath;
+  // イベント通知用
   private ImplicitEventNotifycate mIntentNotifycate;
 
   @Override

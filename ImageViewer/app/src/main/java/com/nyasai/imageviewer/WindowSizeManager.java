@@ -14,7 +14,7 @@ public class WindowSizeManager {
   // 自インスタンス
   private static WindowSizeManager instance = null;
 
-  // 画面サイズ
+  // 画面全体
   public static int width;
   public static int height;
 

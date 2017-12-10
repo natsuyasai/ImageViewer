@@ -20,10 +20,15 @@ import static com.nyasai.imageviewer.Constants.REQ_CODE_SUB_ACT;
  */
 public class GridViewOperation implements AdapterView.OnItemClickListener, View.OnTouchListener{
 
+  // 対象グリッドビュー
   private GridView mGridView;
-  private int mMode; // 動作モード(0:通常起動,1:暗黙インテントによる起動)
+  // 動作モード(0:通常起動,1:暗黙インテントによる起動)
+  private int mMode;
+  // イベント通知用
   private ImplicitEventNotifycate mNotifycate;
+  // 実行中アクティビティ
   private Activity mActivity;
+  // ファイルパスリスト
   private ArrayList<String> mFilePathList;
 
   /**

@@ -95,16 +95,6 @@ public class ImageGridViewAdapter extends BaseAdapter {
     ImageView imageView;
     TextView textView;
   }
-  static class GetViewTaskStartParam
-  {
-    String imageFilePath;
-    ViewHolder viewHolder;
-  }
-  static class GetViewTaskResulttParam
-  {
-    Bitmap bitmap;
-    ViewHolder holder;
-  }
 
   /**
    * グリッドビューにデータ表示(setAdapter実行にて呼び出される)

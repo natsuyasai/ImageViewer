@@ -7,7 +7,6 @@ package com.nyasai.imageviewer;
 public final class Constants {
   // デバッグモード(0:OFF,1:ON)
   public static final boolean DEBUG_MODE = true;
-
   // サブアクティビティ起動時タグ(ファイルパス)
   public static final String FILE_PATH = "FILE_PATH";
   // サブアクティビティ起動時タグ(ファイルパスリスト)
@@ -22,7 +21,6 @@ public final class Constants {
   public static final int REQ_CODE_SUB_ACT = 10;
   // 画像ファイル拡張子
   public static final String[] IMAGE_EXTENSIONS={".jpg",".jpeg",".JPG",".JPEG",".png",".PNG",".bmp",".BMP",".gif",".GIF","tiff",".TIFF","tif",".TIF"};
-
   // 通常起動
   public static final int MODE_DEF = 0;
   // 暗黙的インテントによる起動

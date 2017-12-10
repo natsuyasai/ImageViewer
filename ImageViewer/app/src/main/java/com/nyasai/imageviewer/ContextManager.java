@@ -13,9 +13,7 @@ public class ContextManager {
    */
   private static ContextManager instance = null;
 
-  /**
-   *
-   */
+  // アプリケーションコンテキスト
   private static Context mAppContext;
 
   /**

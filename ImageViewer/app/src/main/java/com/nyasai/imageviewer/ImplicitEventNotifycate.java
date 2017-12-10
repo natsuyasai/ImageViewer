@@ -6,6 +6,7 @@ import android.app.Activity;
  * イベント通知用クラス
  */
 public class ImplicitEventNotifycate {
+  // イベントリスナ
   private ImplicitIntentEventListener mEventListener;
 
 

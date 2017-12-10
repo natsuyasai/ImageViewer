@@ -22,7 +22,9 @@ import static com.nyasai.imageviewer.Common.GetBitMapOption;
 @SuppressLint("AppCompatCustomView")
 public class MyImageView extends ImageView
 {
+  // コンテキスト
   private Context mContext;
+  // 現表示中ビットマップ
   private Bitmap mBitmap;
 
   /**
