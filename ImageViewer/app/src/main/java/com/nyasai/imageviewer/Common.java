@@ -49,6 +49,24 @@ public class Common {
         return bmpOption;
     }
 
+    /**
+     * 画像リサイズ値取得
+     * @param preOptions
+     * @return
+     */
+    public static int GetResizeValue(BitmapFactory.Options preOptions)
+    {
+        /// メモリ削減対策
+        int imageCompSize;
+        // 画面縮小サイズ計算
+        if(preOptions.outWidth >= preOptions.outHeight)
+            imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.GetHeight();
+        else
+            imageCompSize = (preOptions.outHeight * 4)/ WindowSizeManager.GetWidth();
+
+        return imageCompSize;
+    }
+
 
     /**
      * 画像サイズ取得

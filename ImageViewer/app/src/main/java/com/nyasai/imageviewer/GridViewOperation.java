@@ -74,7 +74,7 @@ public class GridViewOperation implements AdapterView.OnItemClickListener, View.
           break;
         case R.id.gridView_sub: //フォルダ単位のサブアクティビティからの呼び出し
           if(mMode == Constants.MODE_DEF)
-            CreateOneImageView(item.imagePath);
+            CreateOneImageView(position,item.imagePath);
           else
           {
             // メインアクティビティにメッセージ送信
@@ -103,12 +103,13 @@ public class GridViewOperation implements AdapterView.OnItemClickListener, View.
     mActivity.startActivityForResult(intent,REQ_CODE_SUB_ACT);
   }
 
-  private void CreateOneImageView(String filePath)
+  private void CreateOneImageView(int position, String filePath)
   {
     // 1ファイルビュー遷移
     if(mFilePathList != null) {
       Intent intent = new Intent(ContextManager.GetContext(), OneImageViewActivity.class);
       intent.putExtra(Constants.FILE_PATH, filePath);
+      intent.putExtra(Constants.FILE_POSITION,position);
       intent.putStringArrayListExtra(Constants.FILE_PATH_LIST, mFilePathList);
       ContextManager.GetContext().startActivity(intent);
     }

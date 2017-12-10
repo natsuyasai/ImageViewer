@@ -9,15 +9,18 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 
 import static com.nyasai.imageviewer.Common.GetBitMapOption;
 
 /**
  * 画像描画用ビュー
  */
-public class MyImageView extends View
+@SuppressLint("AppCompatCustomView")
+public class MyImageView extends ImageView
 {
   private Context mContext;
   private Bitmap mBitmap;
@@ -63,20 +66,6 @@ public class MyImageView extends View
     SetInit(context);
   }
 
-
-  /**
-   * コンストラクタ
-   * @param context
-   * @param attrs
-   * @param defStyleAttr
-   * @param defStyleRes
-   */
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  public MyImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
-    SetInit(context);
-  }
-
   /**
    * 描画
    *
@@ -85,7 +74,6 @@ public class MyImageView extends View
   @SuppressLint("ResourceAsColor")
   @Override
   protected void onDraw(Canvas canvas) {
-    super.onDraw(canvas);
     if(mBitmap != null)
     {
       Paint paint = new Paint();
@@ -105,6 +93,7 @@ public class MyImageView extends View
       canvas.drawBitmap(mBitmap,left,top+navigationsize,paint);
       this.setBackgroundColor(R.color.DarkGray);
     }
+    super.onDraw(canvas);
   }
 
   /**
@@ -113,14 +102,30 @@ public class MyImageView extends View
   private void SetInit(Context context)
   {
     mContext = context;
+    setWillNotDraw(false);
+  }
+
+  /**
+   * レイアウトが生成時
+   */
+  @Override
+  protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+    super.onLayout(changed, left, top, right, bottom);
+    if(super.getWidth() == 0)
+    {
+      // View未形成
+      return;
+    }
   }
 
   /**
    * 画像描画
    * @param imagePath
    */
-  private void SetImage(String imagePath)
+  public void SetImage(String imagePath)
   {
+    if(mBitmap != null)
+      mBitmap.recycle();
     // 画像サイズ取得
     BitmapFactory.Options preOptions = Common.GetBitMapSize(imagePath);
     /// メモリ削減対策

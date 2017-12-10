@@ -165,7 +165,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
       });
       // リサイズ値取得
       BitmapFactory.Options preOptions = Common.GetBitMapSize(imageFilePath);
-      int resizeVal = GetResizeValue(preOptions);
+      int resizeVal = Common.GetResizeValue(preOptions);
       if(resizeVal != 0) {
         // 画像の読み込み，設定
         builder.build()
@@ -252,24 +252,6 @@ public class ImageGridViewAdapter extends BaseAdapter {
     params.width = WindowSizeManager.GetWidth() / 2;
     params.height = (WindowSizeManager.GetHeight() / 4) - 10;
     imageView.setLayoutParams(params);
-  }
-
-  /**
-   * 画像リサイズ値取得
-   * @param preOptions
-   * @return
-   */
-  private int GetResizeValue(BitmapFactory.Options preOptions)
-  {
-    /// メモリ削減対策
-    int imageCompSize;
-    // 画面縮小サイズ計算
-    if(preOptions.outWidth >= preOptions.outHeight)
-      imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.GetHeight();
-    else
-      imageCompSize = (preOptions.outHeight * 4)/ WindowSizeManager.GetWidth();
-
-    return imageCompSize;
   }
 
 }

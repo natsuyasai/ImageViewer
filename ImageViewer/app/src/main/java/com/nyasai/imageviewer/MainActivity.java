@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
       mGVOeration = new GridViewOperation(this,null,(GridView) findViewById(R.id.gridViewHome), MODE_IMPLICIT_INTENT);
       mNowMode = MODE_IMPLICIT_INTENT;
     }
-      ((GridView) findViewById(R.id.gridViewHome)).setOnItemClickListener(mGVOeration);
+    ((GridView) findViewById(R.id.gridViewHome)).setOnItemClickListener(mGVOeration);
 
     // android6.0以上の場合は権限許可チェック
     if(Build.VERSION.SDK_INT >= 23)
