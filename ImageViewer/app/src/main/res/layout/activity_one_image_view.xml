@@ -10,11 +10,12 @@
     android:layout_gravity="center"
     tools:context="com.nyasai.imageviewer.OneImageViewActivity">
 
-    <com.nyasai.imageviewer.MyImageView
+    <com.github.chrisbanes.photoview.PhotoView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/one_image_view_item"
         android:scaleType="matrix"/>
+
 
 
 </android.support.constraint.ConstraintLayout>

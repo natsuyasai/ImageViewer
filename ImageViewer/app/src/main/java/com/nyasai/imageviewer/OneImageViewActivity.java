@@ -8,12 +8,15 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -26,7 +29,7 @@ import java.util.ArrayList;
 public class OneImageViewActivity extends AppCompatActivity {
 
   // イメージビュー
-  private MyImageView mImageView;
+  private PhotoView mImageView;
   // 現表示ファイルと同一フォルダのファイルパス一覧
   private ArrayList<String> mFilePathList;
   // 現表示ファイル
@@ -73,7 +76,7 @@ public class OneImageViewActivity extends AppCompatActivity {
     setContentView(R.layout.activity_one_image_view);
     // レイアウト取得
     mLayout = (ConstraintLayout)findViewById(R.id.one_image_view);
-    mImageView = (MyImageView)findViewById(R.id.one_image_view_item);
+    mImageView = (PhotoView) findViewById(R.id.one_image_view_item);
 
     // ビューに画像描画
     SetImage(filePath);
@@ -82,22 +85,28 @@ public class OneImageViewActivity extends AppCompatActivity {
     SetupGestureDetector();
   }
 
+  /**
+   * 表示用画像設定
+   * @param filePath
+   */
   private void SetImage(String filePath)
   {
     // 画像を設定しビューに追加
-    mImageView.SetImage(filePath);
+    mImageView.setImageURI(Uri.fromFile(new File(filePath)));
     mLayout.invalidate();
     mImageView.invalidate();
   }
 
   /**
-   * タッチイベント
+   * 画面タッチイベント発生
    */
   @Override
-  public boolean onTouchEvent(MotionEvent event) {
-    mGestureDetector.onTouchEvent(event);
-    return true;
+  public boolean dispatchTouchEvent(MotionEvent ev) {
+    // 先にスワイプ判定を行い，次のビューに渡す
+    mGestureDetector.onTouchEvent(ev);
+    return super.dispatchTouchEvent(ev);
   }
+
 
   /**
    * タップイベント関連設定
@@ -123,13 +132,7 @@ public class OneImageViewActivity extends AppCompatActivity {
            */
           @Override
           public boolean onDoubleTap(MotionEvent e) {
-            // 画像を画面まで拡大
-            Log.d("onDoubleTap","ダブルタップ");
-            Picasso.with(getApplicationContext())
-                .load(new File(mFilePathList.get(mNowPosition)))
-                .fit()
-                .into(mImageView);
-            return super.onDoubleTap(e);
+            return false;
           }
 
           /**
@@ -139,7 +142,7 @@ public class OneImageViewActivity extends AppCompatActivity {
            */
           @Override
           public boolean onDoubleTapEvent(MotionEvent e) {
-            return super.onDoubleTapEvent(e);
+            return false;
           }
 
           /**
@@ -149,7 +152,8 @@ public class OneImageViewActivity extends AppCompatActivity {
            */
           @Override
           public boolean onSingleTapConfirmed(MotionEvent e) {
-            return super.onSingleTapConfirmed(e);
+            return false
+                ;
           }
 
           /**

@@ -91,8 +91,38 @@ public class Common {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return preOptions;
+    }
+
+    public static Bitmap GetBitmap(String imagePath,Context context)
+    {
+        Bitmap bitmap;
+        // 画像サイズ取得
+        BitmapFactory.Options preOptions = Common.GetBitMapSize(imagePath);
+        /// メモリ削減対策
+        int imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.GetHeight(); // 画面縮小サイズ計算
+        //int imageCompSize = -1;
+        // ビットマップ設定
+        BitmapFactory.Options bmpOption = GetBitMapOption(context,imageCompSize);
+        bitmap = BitmapFactory.decodeFile(imagePath,bmpOption);
+
+        // 画像リサイズ
+        // note. outWidth:outHeight = GetWidth:GetHeight
+        int width,height;
+        if(preOptions.outWidth >= preOptions.outHeight)
+        {
+            width = WindowSizeManager.GetContentWidth();
+            int a = (preOptions.outHeight* WindowSizeManager.GetContentWidth())/preOptions.outWidth;
+            height = a;
+        }
+        else
+        {
+            height = WindowSizeManager.GetContentHeight();
+            int a = (preOptions.outWidth* WindowSizeManager.GetContentHeight())/preOptions.outHeight;
+            width = a;
+        }
+        bitmap = Bitmap.createScaledBitmap(bitmap,width,height,true);
+        return bitmap;
     }
 
     /**
