@@ -23,6 +23,8 @@ import com.squareup.picasso.Target;
 import java.io.File;
 import java.util.ArrayList;
 
+import static com.nyasai.imageviewer.Common.GetBitMapOption;
+
 /**
  * 画像一枚単位の描画用アクティビティ
  */
@@ -43,7 +45,7 @@ public class OneImageViewActivity extends AppCompatActivity {
   // スワイプイベント閾値（速度）
   private final int SWAIP_X_SPEED_ABS_TH = 2500;
   // スワイプイベント閾値（移動量）
-  private final int SWAIP_X_MOVE_TH = 100;
+  private final int SWAIP_X_MOVE_TH = 300;
 
 
   @SuppressLint("ResourceType")
@@ -91,8 +93,17 @@ public class OneImageViewActivity extends AppCompatActivity {
    */
   private void SetImage(String filePath)
   {
+    BitmapFactory.Options preOptions = Common.GetBitMapSize(filePath);
+    Bitmap bitmap;
+    if((preOptions.outWidth*preOptions.outHeight) > (1920*1080)) {
+      bitmap = Common.GetBitmap(filePath,mContext);
+    }
+    else
+    {
+      bitmap = BitmapFactory.decodeFile(filePath);
+    }
     // 画像を設定しビューに追加
-    mImageView.setImageURI(Uri.fromFile(new File(filePath)));
+    mImageView.setImageBitmap(bitmap);
     mLayout.invalidate();
     mImageView.invalidate();
   }

@@ -100,8 +100,7 @@ public class Common {
         // 画像サイズ取得
         BitmapFactory.Options preOptions = Common.GetBitMapSize(imagePath);
         /// メモリ削減対策
-        int imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.GetHeight(); // 画面縮小サイズ計算
-        //int imageCompSize = -1;
+        int imageCompSize = (preOptions.outWidth * 1)/ WindowSizeManager.GetHeight(); // 画面縮小サイズ計算
         // ビットマップ設定
         BitmapFactory.Options bmpOption = GetBitMapOption(context,imageCompSize);
         bitmap = BitmapFactory.decodeFile(imagePath,bmpOption);
