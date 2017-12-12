@@ -2,12 +2,7 @@ package com.nyasai.imageviewer;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
-import android.graphics.Paint;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.io.File;
@@ -51,23 +46,23 @@ public class FileManager {
    * 初期化処理
    * ここでファイル一覧とフォルダパスとフォルダ一覧を取得する
    */
-  public void GetAllFileList()
+  public void getAllFileList()
   {
     // 画像ファイル一覧取得
-    LoadImageFileUri();
+    loadImageFileUri();
     // 上記で取得した画像ファイル一覧(URI)からフォルダリストを取得
-    CreateFolderPathList(mCursor);
+    createFolderPathList(mCursor);
   }
 
   /**
    * 画像ファイル一覧情報取得
    * @return
    */
-  public Cursor GetImageFileUri()
+  public Cursor getImageFileUri()
   {
     return mCursor;
   }
-  public ArrayList<String> GetImageFilePath()
+  public ArrayList<String> getImageFilePath()
   {
     return mfilePathList;
   }
@@ -76,7 +71,7 @@ public class FileManager {
    * フォルダパスリスト取得
    * @return
    */
-  public ArrayList<String> GetFolderPaths()
+  public ArrayList<String> getFolderPaths()
   {
     return mfolderPathList;
   }
@@ -86,9 +81,9 @@ public class FileManager {
    * @param cursor
    * @return
    */
-  private void CreateFolderPathList(Cursor cursor)
+  private void createFolderPathList(Cursor cursor)
   {
-    mfolderPathList = GetFolderPaths(cursor);
+    mfolderPathList = getFolderPaths(cursor);
   }
 
   /**
@@ -97,7 +92,7 @@ public class FileManager {
    * @param cursor
    * @return
    */
-  public ArrayList<String> GetFolderPaths(Cursor cursor)
+  public ArrayList<String> getFolderPaths(Cursor cursor)
   {
     // フォルダパスリスト
     ArrayList<String > folderPathList = new ArrayList<String>();
@@ -137,10 +132,10 @@ public class FileManager {
    * 画像ファイル一覧読み込み
    * @return
    */
-  private void LoadImageFileUri()
+  private void loadImageFileUri()
   {
 
-    ContentResolver contentResolver = ContextManager.GetContext().getContentResolver();
+    ContentResolver contentResolver = ContextManager.getContext().getContentResolver();
 
     // 選択列(射影)
     String[] projection = {MediaStore.Images.Media.DATA,MediaStore.Images.Media.DISPLAY_NAME};
@@ -158,15 +153,15 @@ public class FileManager {
         int nameIndex = cursor.getColumnIndex(
             MediaStore.Images.Media.DISPLAY_NAME);
         while(!cursor.isAfterLast()){
-          Log.d("LoadImageFileUri","Image Path = " + cursor.getString(pathIndex));
-          Log.d("LoadImageFileUri","Image Name = " + cursor.getString(nameIndex));
+          Log.d("loadImageFileUri","Image Path = " + cursor.getString(pathIndex));
+          Log.d("loadImageFileUri","Image Name = " + cursor.getString(nameIndex));
           cursor.moveToNext();
         }
       }
       cursor.moveToFirst();
 
       mCursor = cursor;
-      SetFilePaths(cursor);
+      setFilePaths(cursor);
     }
   }
 
@@ -174,7 +169,7 @@ public class FileManager {
    * ファイルパス一覧設定(文字列)
    * @param cursor
    */
-  public void SetFilePaths(Cursor cursor)
+  public void setFilePaths(Cursor cursor)
   {
     // フォルダパスリスト
     ArrayList<String > filePathList = new ArrayList<String>();
@@ -198,7 +193,7 @@ public class FileManager {
    * @param cursor
    * @return
    */
-  public ArrayList<ImageGridViewAdapter.GridViewItem> GetFilePathForRepresentative(Cursor cursor)
+  public ArrayList<ImageGridViewAdapter.GridViewItem> getFilePathForRepresentative(Cursor cursor)
   {
     ArrayList<ImageGridViewAdapter.GridViewItem> gridViewItems = new ArrayList<ImageGridViewAdapter.GridViewItem>();
     HashMap<String,Integer> folderPathList = new HashMap<String,Integer>();
@@ -247,7 +242,7 @@ public class FileManager {
    * @param folderPath
    * @return
    */
-  public ArrayList<String> GetAllFile(String folderPath)
+  public ArrayList<String> getAllFile(String folderPath)
   {
     File[] files =new File(folderPath).listFiles();
     ArrayList<String> imageFilePath = new ArrayList<String>();

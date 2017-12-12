@@ -7,5 +7,5 @@ public interface ImplicitIntentEventListener extends EventListener {
   /**
    * インテントリターン設定
    */
-  void ReturnIntentEvent(Object object);
+  void returnIntentEvent(Object object);
 }

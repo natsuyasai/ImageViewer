@@ -2,12 +2,10 @@ package com.nyasai.imageviewer;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.GridView;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import javax.security.auth.callback.Callback;
@@ -37,7 +35,7 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
 
     // イベント通知取得設定
     mIntentNotifycate = new ImplicitEventNotifycate();
-    mIntentNotifycate.SetImplicitIntentListener(this);
+    mIntentNotifycate.setImplicitIntentListener(this);
 
 
     // グリッドビュークリックスナ登録
@@ -60,7 +58,7 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
   private Runnable runnable = new Runnable() {
     @Override
     public void run() {
-      FolderView.this.SetupFile(mFolderPath);
+      FolderView.this.setupFile(mFolderPath);
     }
   };
 
@@ -75,17 +73,17 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     // ファイル一覧表示
-    SetupFile(mFolderPath);
+    setupFile(mFolderPath);
   }
 
   /**
    * グリッドビューにファイル一覧を設定
    * @param folderPath
    */
-  private void SetupFile(String folderPath)
+  private void setupFile(String folderPath)
   {
     // 指定フォルダの画像ファイルパスを取得
-    ArrayList<String> filePath =  mfileManager.GetAllFile(folderPath);
+    ArrayList<String> filePath =  mfileManager.getAllFile(folderPath);
 
     // グリッドビュー表示用アイテムリスト生成
     ArrayList<ImageGridViewAdapter.GridViewItem> gridViewItems = new ArrayList<ImageGridViewAdapter.GridViewItem>();
@@ -98,10 +96,10 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
     }
 
     // ファイルパスリストを設定
-    mGVOeration.SetFilePathList(filePath);
+    mGVOeration.setFilePathList(filePath);
 
     // グリッドビューに設定
-    ImageGridViewAdapter adapter = new ImageGridViewAdapter(ContextManager.GetContext(),
+    ImageGridViewAdapter adapter = new ImageGridViewAdapter(ContextManager.getContext(),
         gridViewItems,
         R.layout.grid_item_image);
     GridView gridView = (GridView)findViewById(R.id.gridView_sub);
@@ -114,7 +112,7 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
    * @param object
    */
   @Override
-  public void ReturnIntentEvent(Object object) {
+  public void returnIntentEvent(Object object) {
     Intent reslt = new Intent();
     reslt.putExtra("SubSctivity",(String)object);
     setResult(Activity.RESULT_OK,reslt);

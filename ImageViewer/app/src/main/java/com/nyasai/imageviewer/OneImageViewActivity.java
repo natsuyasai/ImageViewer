@@ -5,25 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.github.chrisbanes.photoview.PhotoView;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
-import java.io.File;
 import java.util.ArrayList;
-
-import static com.nyasai.imageviewer.Common.GetBitMapOption;
 
 /**
  * 画像一枚単位の描画用アクティビティ
@@ -81,22 +71,22 @@ public class OneImageViewActivity extends AppCompatActivity {
     mImageView = (PhotoView) findViewById(R.id.one_image_view_item);
 
     // ビューに画像描画
-    SetImage(filePath);
+    setImage(filePath);
 
     // タップイベント動作セットアップ
-    SetupGestureDetector();
+    setupGestureDetector();
   }
 
   /**
    * 表示用画像設定
    * @param filePath
    */
-  private void SetImage(String filePath)
+  private void setImage(String filePath)
   {
-    BitmapFactory.Options preOptions = Common.GetBitMapSize(filePath);
+    BitmapFactory.Options preOptions = Common.getBitMapSize(filePath);
     Bitmap bitmap;
     if((preOptions.outWidth*preOptions.outHeight) > (1920*1080)) {
-      bitmap = Common.GetBitmap(filePath,mContext);
+      bitmap = Common.getBitmap(filePath,mContext);
     }
     else
     {
@@ -122,7 +112,7 @@ public class OneImageViewActivity extends AppCompatActivity {
   /**
    * タップイベント関連設定
    */
-  private void SetupGestureDetector()
+  private void setupGestureDetector()
   {
     mGestureDetector = new GestureDetector(this,
         new GestureDetector.SimpleOnGestureListener() {
@@ -236,7 +226,7 @@ public class OneImageViewActivity extends AppCompatActivity {
                 Log.d("SWAIP","左へスワイプ");
                 // 次の画像へ
                 if(mNowPosition < (mFilePathList.size()-1))
-                  SetImage(mFilePathList.get(++mNowPosition));
+                  setImage(mFilePathList.get(++mNowPosition));
               }
             }
             else if(befor.getX() < after.getX() && (after.getX()-befor.getX()) > SWAIP_X_MOVE_TH)
@@ -247,7 +237,7 @@ public class OneImageViewActivity extends AppCompatActivity {
                 Log.d("SWAIP","右へスワイプ");
                 // 前の画像へ
                 if(mNowPosition > 0)
-                  SetImage(mFilePathList.get(--mNowPosition));
+                  setImage(mFilePathList.get(--mNowPosition));
               }
             }
             else

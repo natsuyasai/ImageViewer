@@ -12,10 +12,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.GridView;
 import android.widget.Toast;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,11 +49,11 @@ public class MainActivity extends AppCompatActivity {
     setTitle(R.string.app_home);
     // コンテキスト設定
     ContextManager.onCreateApplication(getApplicationContext());
-    mContext = ContextManager.GetContext();
+    mContext = ContextManager.getContext();
 
     // 画面サイズ保持
     WindowSizeManager.onCreateApplication(mContext);
-    WindowSizeManager.SetViewAllWindowsSize(getWindowManager().getDefaultDisplay());
+    WindowSizeManager.setViewAllWindowsSize(getWindowManager().getDefaultDisplay());
 
     // インテント受取
     Intent intent = getIntent();
@@ -72,10 +70,10 @@ public class MainActivity extends AppCompatActivity {
 
     // android6.0以上の場合は権限許可チェック
     if(Build.VERSION.SDK_INT >= 23)
-      CheckPermission();
+      checkPermission();
     else {
       // ファイル一覧取得
-      StartMain();
+      startMain();
     }
   }
 
@@ -87,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
   public void onWindowFocusChanged(boolean hasFocus) {
     super.onWindowFocusChanged(hasFocus);
     // ウィンドウサイズを保持
-    WindowSizeManager.SetViewWindowsSize(findViewById(R.id.main_activity));
+    WindowSizeManager.setViewWindowsSize(findViewById(R.id.main_activity));
   }
 
 
@@ -103,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
     super.onActivityResult(requestCode, resultCode, data);
     if (data == null) {
       // フォルダ一覧表示
-      SetupFile();
+      setupFile();
     }
     else
     {
@@ -121,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
   /**
    * メイン画面動作統括部
    */
-  private void StartMain()
+  private void startMain()
   {
     // 初期設定
     mfileManager = new FileManager();
@@ -134,9 +132,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void run() {
       // 取得
-      MainActivity.this.mfileManager.GetAllFileList();
+      MainActivity.this.mfileManager.getAllFileList();
       // 設定
-      MainActivity.this.SetupFile();
+      MainActivity.this.setupFile();
     }
   };
 
@@ -144,11 +142,11 @@ public class MainActivity extends AppCompatActivity {
    * ファイル検索開始
    */
   private ArrayList<ImageGridViewAdapter.GridViewItem> mGridViewData;
-  private void SetupFile()
+  private void setupFile()
   {
     // フォルダごとに一番はじめに見つかったファイルパスを取得
     if(mGridViewData == null)
-      mGridViewData = mfileManager.GetFilePathForRepresentative(mfileManager.GetImageFileUri());
+      mGridViewData = mfileManager.getFilePathForRepresentative(mfileManager.getImageFileUri());
     // アダプタに登録
     ImageGridViewAdapter adapter = new ImageGridViewAdapter(this,
             mGridViewData,
@@ -162,23 +160,23 @@ public class MainActivity extends AppCompatActivity {
   /**
    * ファイルアクセス権限確認
    */
-  private void CheckPermission()
+  private void checkPermission()
   {
     // 許可済
     if(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
     {
-      StartMain();
+      startMain();
     }
     else // 拒否時
     {
-      RequestLocationPermission();
+      requestLocationPermission();
     }
   }
 
   /**
    * 許可を求める
    */
-  private void RequestLocationPermission()
+  private void requestLocationPermission()
   {
     if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE))
     {
@@ -204,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
     if (requestCode == REQUEST_PERMISSION) {
       // 使用が許可された
       if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-        StartMain();
+        startMain();
         return;
 
       } else {

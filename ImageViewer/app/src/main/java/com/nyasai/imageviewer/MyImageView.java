@@ -6,15 +6,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Build;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
 
-import static com.nyasai.imageviewer.Common.GetBitMapOption;
+import static com.nyasai.imageviewer.Common.getBitMapOption;
 
 /**
  * 画像描画用ビュー
@@ -33,7 +29,7 @@ public class MyImageView extends ImageView
    */
   public MyImageView(Context context) {
     super(context);
-    SetInit(context);
+    setInit(context);
   }
 
   /**
@@ -43,8 +39,8 @@ public class MyImageView extends ImageView
    */
   public MyImageView(Context context, String filePath) {
     super(context);
-    SetInit(context);
-    SetImage(filePath);
+    setInit(context);
+    setImage(filePath);
   }
 
   /**
@@ -54,7 +50,7 @@ public class MyImageView extends ImageView
    */
   public MyImageView(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
-    SetInit(context);
+    setInit(context);
   }
 
   /**
@@ -65,7 +61,7 @@ public class MyImageView extends ImageView
    */
   public MyImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    SetInit(context);
+    setInit(context);
   }
 
   /**
@@ -83,13 +79,13 @@ public class MyImageView extends ImageView
       int left=0,top=0;
       if(mBitmap.getWidth() > mBitmap.getHeight())
       {
-        top = WindowSizeManager.GetContentHeight()/2 - mBitmap.getHeight()/2;
+        top = WindowSizeManager.getContentHeight()/2 - mBitmap.getHeight()/2;
       }
       else
       {
-        left = WindowSizeManager.GetContentWidth()/2 - mBitmap.getWidth()/2;
+        left = WindowSizeManager.getContentWidth()/2 - mBitmap.getWidth()/2;
       }
-      int navigationsize = WindowSizeManager.GetHeight()-WindowSizeManager.GetContentAllHeight();
+      int navigationsize = WindowSizeManager.getHeight()-WindowSizeManager.getContentAllHeight();
       if(navigationsize == 0)
         navigationsize = 70;
       canvas.drawBitmap(mBitmap,left,top+navigationsize,paint);
@@ -101,7 +97,7 @@ public class MyImageView extends ImageView
   /**
    * 初期設定
    */
-  private void SetInit(Context context)
+  private void setInit(Context context)
   {
     mContext = context;
     setWillNotDraw(false);
@@ -124,32 +120,32 @@ public class MyImageView extends ImageView
    * 画像描画
    * @param imagePath
    */
-  public void SetImage(String imagePath)
+  public void setImage(String imagePath)
   {
     if(mBitmap != null)
       mBitmap.recycle();
     // 画像サイズ取得
-    BitmapFactory.Options preOptions = Common.GetBitMapSize(imagePath);
+    BitmapFactory.Options preOptions = Common.getBitMapSize(imagePath);
     /// メモリ削減対策
-    int imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.GetHeight(); // 画面縮小サイズ計算
+    int imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.getHeight(); // 画面縮小サイズ計算
     //int imageCompSize = -1;
     // ビットマップ設定
-    BitmapFactory.Options bmpOption = GetBitMapOption(mContext,imageCompSize);
+    BitmapFactory.Options bmpOption = getBitMapOption(mContext,imageCompSize);
     mBitmap = BitmapFactory.decodeFile(imagePath,bmpOption);
 
     // 画像リサイズ
-    // note. outWidth:outHeight = GetWidth:GetHeight
+    // note. outWidth:outHeight = getWidth:getHeight
     int width,height;
     if(preOptions.outWidth >= preOptions.outHeight)
     {
-      width = WindowSizeManager.GetContentWidth();
-      int a = (preOptions.outHeight* WindowSizeManager.GetContentWidth())/preOptions.outWidth;
+      width = WindowSizeManager.getContentWidth();
+      int a = (preOptions.outHeight* WindowSizeManager.getContentWidth())/preOptions.outWidth;
       height = a;
     }
     else
     {
-      height = WindowSizeManager.GetContentHeight();
-      int a = (preOptions.outWidth* WindowSizeManager.GetContentHeight())/preOptions.outHeight;
+      height = WindowSizeManager.getContentHeight();
+      int a = (preOptions.outWidth* WindowSizeManager.getContentHeight())/preOptions.outHeight;
       width = a;
     }
     mBitmap = Bitmap.createScaledBitmap(mBitmap,width,height,true);

@@ -1,16 +1,9 @@
 package com.nyasai.imageviewer;
 
-/**
- * Created by yasai on 2017/11/18.
- */
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.util.DisplayMetrics;
-import android.view.Display;
-import android.view.WindowManager;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -31,7 +24,7 @@ public class Common {
      * @param context
      * @return
      */
-    public static BitmapFactory.Options GetBitMapOption(Context context, int imageCompSize)
+    public static BitmapFactory.Options getBitMapOption(Context context, int imageCompSize)
     {
         BitmapFactory.Options bmpOption = new BitmapFactory.Options();
         // ARGBそれぞれ0~127階調の色を使用
@@ -54,15 +47,15 @@ public class Common {
      * @param preOptions
      * @return
      */
-    public static int GetResizeValue(BitmapFactory.Options preOptions)
+    public static int getResizeValue(BitmapFactory.Options preOptions)
     {
         /// メモリ削減対策
         int imageCompSize;
         // 画面縮小サイズ計算
         if(preOptions.outWidth >= preOptions.outHeight)
-            imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.GetHeight();
+            imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.getHeight();
         else
-            imageCompSize = (preOptions.outHeight * 4)/ WindowSizeManager.GetWidth();
+            imageCompSize = (preOptions.outHeight * 4)/ WindowSizeManager.getWidth();
 
         return imageCompSize;
     }
@@ -73,7 +66,7 @@ public class Common {
      * @param imageFilePath
      * @return
      */
-    public static BitmapFactory.Options GetBitMapSize(String imageFilePath)
+    public static BitmapFactory.Options getBitMapSize(String imageFilePath)
     {
         // 画像サイズ一時取得
         BitmapFactory.Options preOptions = new BitmapFactory.Options();
@@ -94,30 +87,30 @@ public class Common {
         return preOptions;
     }
 
-    public static Bitmap GetBitmap(String imagePath,Context context)
+    public static Bitmap getBitmap(String imagePath, Context context)
     {
         Bitmap bitmap;
         // 画像サイズ取得
-        BitmapFactory.Options preOptions = Common.GetBitMapSize(imagePath);
+        BitmapFactory.Options preOptions = Common.getBitMapSize(imagePath);
         /// メモリ削減対策
-        int imageCompSize = (preOptions.outWidth * 1)/ WindowSizeManager.GetHeight(); // 画面縮小サイズ計算
+        int imageCompSize = (preOptions.outWidth * 1)/ WindowSizeManager.getHeight(); // 画面縮小サイズ計算
         // ビットマップ設定
-        BitmapFactory.Options bmpOption = GetBitMapOption(context,imageCompSize);
+        BitmapFactory.Options bmpOption = getBitMapOption(context,imageCompSize);
         bitmap = BitmapFactory.decodeFile(imagePath,bmpOption);
 
         // 画像リサイズ
-        // note. outWidth:outHeight = GetWidth:GetHeight
+        // note. outWidth:outHeight = getWidth:getHeight
         int width,height;
         if(preOptions.outWidth >= preOptions.outHeight)
         {
-            width = WindowSizeManager.GetContentWidth();
-            int a = (preOptions.outHeight* WindowSizeManager.GetContentWidth())/preOptions.outWidth;
+            width = WindowSizeManager.getContentWidth();
+            int a = (preOptions.outHeight* WindowSizeManager.getContentWidth())/preOptions.outWidth;
             height = a;
         }
         else
         {
-            height = WindowSizeManager.GetContentHeight();
-            int a = (preOptions.outWidth* WindowSizeManager.GetContentHeight())/preOptions.outHeight;
+            height = WindowSizeManager.getContentHeight();
+            int a = (preOptions.outWidth* WindowSizeManager.getContentHeight())/preOptions.outHeight;
             width = a;
         }
         bitmap = Bitmap.createScaledBitmap(bitmap,width,height,true);
@@ -128,7 +121,7 @@ public class Common {
      * 最大公約数(ユークリッド互除法)
      * @return
      */
-    public static int CalcEuclideanAlgo(int a, int b)
+    public static int calcEuclideanAlgo(int a, int b)
     {
         int ans = 0;
         int tmp;
@@ -146,7 +139,7 @@ public class Common {
             tmp_b= tmp;
         }
         if(tmp_b != 0)
-            ans = CalcEuclideanAlgo(tmp_a,tmp_b);
+            ans = calcEuclideanAlgo(tmp_a,tmp_b);
         else
             ans = tmp_a;
         return ans;

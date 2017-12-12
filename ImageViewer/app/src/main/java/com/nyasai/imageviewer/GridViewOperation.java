@@ -45,7 +45,7 @@ public class GridViewOperation implements AdapterView.OnItemClickListener, View.
   /**
    * グリッドビューのファイルパスリスト設定
    */
-  public void SetFilePathList(ArrayList<String> list)
+  public void setFilePathList(ArrayList<String> list)
   {
     mFilePathList = list;
   }
@@ -75,7 +75,7 @@ public class GridViewOperation implements AdapterView.OnItemClickListener, View.
       switch (parent.getId())
       {
         case R.id.gridViewHome: // メインアクティビティからの呼び出し
-          CreateSubFolderView(item.folderPath);
+          createSubFolderView(item.folderPath);
           break;
         case R.id.gridView_sub: //フォルダ単位のサブアクティビティからの呼び出し
           if(mMode == Constants.MODE_DEF)
@@ -84,7 +84,7 @@ public class GridViewOperation implements AdapterView.OnItemClickListener, View.
           {
             // メインアクティビティにメッセージ送信
             if(mNotifycate != null)
-              mNotifycate.SendImplicitIntentEvent(item.imagePath);
+              mNotifycate.sendImplicitIntentEvent(item.imagePath);
           }
           break;
         default:
@@ -98,13 +98,13 @@ public class GridViewOperation implements AdapterView.OnItemClickListener, View.
    * 画像描画用ビュー新規作成(サブアクティビティ生成)
    * @param subFordlerPath
    */
-  private void CreateSubFolderView(String subFordlerPath)
+  private void createSubFolderView(String subFordlerPath)
   {
     // フォルダ単位ビュー遷移
-    Intent intent = new Intent(ContextManager.GetContext(),FolderView.class);
+    Intent intent = new Intent(ContextManager.getContext(),FolderView.class);
     intent.putExtra(Constants.FOLDER_PATH, subFordlerPath);
     intent.putExtra(Constants.MODE, mMode);
-    //ContextManager.GetContext().startActivity(intent);
+    //ContextManager.getContext().startActivity(intent);
     mActivity.startActivityForResult(intent,REQ_CODE_SUB_ACT);
   }
 
@@ -112,11 +112,11 @@ public class GridViewOperation implements AdapterView.OnItemClickListener, View.
   {
     // 1ファイルビュー遷移
     if(mFilePathList != null) {
-      Intent intent = new Intent(ContextManager.GetContext(), OneImageViewActivity.class);
+      Intent intent = new Intent(ContextManager.getContext(), OneImageViewActivity.class);
       intent.putExtra(Constants.FILE_PATH, filePath);
       intent.putExtra(Constants.FILE_POSITION,position);
       intent.putStringArrayListExtra(Constants.FILE_PATH_LIST, mFilePathList);
-      ContextManager.GetContext().startActivity(intent);
+      ContextManager.getContext().startActivity(intent);
     }
   }
 

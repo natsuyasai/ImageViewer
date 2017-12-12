@@ -1,10 +1,8 @@
 package com.nyasai.imageviewer;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +14,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import static com.nyasai.imageviewer.Common.GetBitMapOption;
 
 /**
  * 画像表示グリッドビュー用アダプタ
@@ -136,7 +131,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
     }
 
     // ビューサイズ設定
-    SetGridViewSize(imageView);
+    setGridViewSize(imageView);
 
     // 画像を設定
     if(imageView != null)
@@ -154,8 +149,8 @@ public class ImageGridViewAdapter extends BaseAdapter {
         }
       });
       // リサイズ値取得
-      BitmapFactory.Options preOptions = Common.GetBitMapSize(imageFilePath);
-      int resizeVal = Common.GetResizeValue(preOptions);
+      BitmapFactory.Options preOptions = Common.getBitMapSize(imageFilePath);
+      int resizeVal = Common.getResizeValue(preOptions);
       if(resizeVal != 0) {
         // 画像の読み込み，設定
         builder.build()
@@ -188,16 +183,16 @@ public class ImageGridViewAdapter extends BaseAdapter {
 //          tag = mImageView.getTag().toString();
 //
 //          // 画像サイズ取得
-//          BitmapFactory.Options preOptions = Common.GetBitMapSize(imageFilePath);
+//          BitmapFactory.Options preOptions = Common.getBitMapSize(imageFilePath);
 //          /// メモリ削減対策
 //          int imageCompSize;
 //          // 画面縮小サイズ計算
 //          if(preOptions.outWidth >= preOptions.outHeight)
-//            imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.GetHeight();
+//            imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.getHeight();
 //          else
-//            imageCompSize = (preOptions.outHeight * 4)/ WindowSizeManager.GetWidth();
+//            imageCompSize = (preOptions.outHeight * 4)/ WindowSizeManager.getWidth();
 //          // ビットマップ設定
-//          BitmapFactory.Options bmpOption = GetBitMapOption(mContext,imageCompSize);
+//          BitmapFactory.Options bmpOption = getBitMapOption(mContext,imageCompSize);
 //          // ビットマップオブジェクトの生成
 //          reslt.bitmap = BitmapFactory.decodeFile(imageFilePath,bmpOption);
 //
@@ -236,11 +231,11 @@ public class ImageGridViewAdapter extends BaseAdapter {
    * グリッドビューアイテムのサイズ設定
    * @param imageView
    */
-  private void SetGridViewSize(ImageView imageView)
+  private void setGridViewSize(ImageView imageView)
   {
     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
-    params.width = WindowSizeManager.GetWidth() / 2;
-    params.height = (WindowSizeManager.GetHeight() / 4) - 10;
+    params.width = WindowSizeManager.getWidth() / 2;
+    params.height = (WindowSizeManager.getHeight() / 4) - 10;
     imageView.setLayoutParams(params);
   }
 

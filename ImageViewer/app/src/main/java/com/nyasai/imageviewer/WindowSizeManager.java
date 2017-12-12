@@ -39,14 +39,14 @@ public class WindowSizeManager {
     width = point.x;
     height = point.y;
   }
-  public static void SetViewAllWindowsSize(Display display)
+  public static void setViewAllWindowsSize(Display display)
   {
     Point point = new Point();
     display.getSize(point);
     contentAllWidth = point.x;
     contentAllHeight = point.y;
   }
-  public static void SetViewWindowsSize(View view)
+  public static void setViewWindowsSize(View view)
   {
     contentWidth = view.getWidth();
     contentHeight = view.getHeight();
@@ -56,11 +56,11 @@ public class WindowSizeManager {
    * 画面サイズ取得
    * @return
    */
-  public static int GetWidth()
+  public static int getWidth()
   {
     return width;
   }
-  public static int GetHeight()
+  public static int getHeight()
   {
     return height;
   }
@@ -69,11 +69,11 @@ public class WindowSizeManager {
    * 画面サイズ取得（タイトルバー抜きビューサイズ）
    * @return
    */
-  public static int GetContentAllWidth()
+  public static int getContentAllWidth()
   {
     return contentAllWidth;
   }
-  public static int GetContentAllHeight()
+  public static int getContentAllHeight()
   {
     return contentAllHeight;
   }
@@ -82,11 +82,11 @@ public class WindowSizeManager {
    * 画面サイズ取得（ビューサイズ）
    * @return
    */
-  public static int GetContentWidth()
+  public static int getContentWidth()
   {
     return contentWidth;
   }
-  public static int GetContentHeight()
+  public static int getContentHeight()
   {
     return contentHeight;
   }

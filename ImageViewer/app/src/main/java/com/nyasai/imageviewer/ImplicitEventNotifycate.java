@@ -1,7 +1,5 @@
 package com.nyasai.imageviewer;
 
-import android.app.Activity;
-
 /**
  * イベント通知用クラス
  */
@@ -13,9 +11,9 @@ public class ImplicitEventNotifycate {
   /**
    * 暗黙的インテントリターンイベント
    */
-  public void SendImplicitIntentEvent(Object object)
+  public void sendImplicitIntentEvent(Object object)
   {
-    mEventListener.ReturnIntentEvent(object);
+    mEventListener.returnIntentEvent(object);
   }
 
 
@@ -24,7 +22,7 @@ public class ImplicitEventNotifycate {
    * リスナーセット
    * @param listener
    */
-  public void SetImplicitIntentListener(ImplicitIntentEventListener listener)
+  public void setImplicitIntentListener(ImplicitIntentEventListener listener)
   {
     mEventListener = listener;
   }
