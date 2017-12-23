@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -50,6 +51,17 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
 
     // 画像描画
     (new Thread(runnable)).start();
+  }
+
+  /**
+   * メニュー設定
+   * @param menu
+   * @return
+   */
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.folder_menu,menu);
+    return super.onCreateOptionsMenu(menu);
   }
 
   /**

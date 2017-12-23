@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -88,6 +89,16 @@ public class MainActivity extends AppCompatActivity {
     WindowSizeManager.setViewWindowsSize(findViewById(R.id.main_activity));
   }
 
+  /**
+   * メニュー設定
+   * @param menu
+   * @return
+   */
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.home_menu,menu);
+    return super.onCreateOptionsMenu(menu);
+  }
 
   /**
    * サブアクティビティからの戻り時
