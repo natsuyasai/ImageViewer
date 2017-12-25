@@ -2,10 +2,12 @@ package com.nyasai.imageviewer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.view.*;
 
 import com.github.chrisbanes.photoview.PhotoView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -51,18 +54,9 @@ public class OneImageViewActivity extends AppCompatActivity {
     // コンテキスト設定
     mContext = getApplicationContext();
 
-//    // タイトル設定
-//    String[] splitStr = filePath.split("/",0);
-//    setTitle(splitStr[splitStr.length - 1]);
-//    // ナビゲーションバー非表示
-//    if (Build.VERSION.SDK_INT >= 19) {
-//      Window window = getWindow();
-//      View view = window.getDecorView();
-//      view.setSystemUiVisibility(
-//          View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
-//              View.SYSTEM_UI_FLAG_FULLSCREEN |
-//              View.SYSTEM_UI_FLAG_FULLSCREEN);
-//    }
+    // タイトル設定
+    String[] splitStr = filePath.split("/",0);
+    setTitle(splitStr[splitStr.length - 1]);
 
     // レイアウト設定
     setContentView(R.layout.activity_one_image_view);
@@ -76,6 +70,36 @@ public class OneImageViewActivity extends AppCompatActivity {
     // タップイベント動作セットアップ
     setupGestureDetector();
   }
+  
+  /**
+   * メニュー設定
+   * @param menu
+   * @return
+   */
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.item_menu,menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+  
+  /**
+   * メニューアイテム選択処理
+   * @param item
+   * @return
+   */
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId())
+    {
+      case R.id.folder_menu_remove:
+        break;
+      default:
+        break;
+    }
+    
+    return super.onOptionsItemSelected(item);
+  }
+  
 
   /**
    * 表示用画像設定
@@ -153,8 +177,7 @@ public class OneImageViewActivity extends AppCompatActivity {
            */
           @Override
           public boolean onSingleTapConfirmed(MotionEvent e) {
-            return false
-                ;
+            return false;
           }
 
           /**
@@ -195,7 +218,6 @@ public class OneImageViewActivity extends AppCompatActivity {
            */
           @Override
           public void onLongPress(MotionEvent e) {
-
           }
 
           /**
@@ -225,8 +247,10 @@ public class OneImageViewActivity extends AppCompatActivity {
                 // 右→左へのスワイプ
                 Log.d("SWAIP","左へスワイプ");
                 // 次の画像へ
-                if(mNowPosition < (mFilePathList.size()-1))
+                if(mNowPosition < (mFilePathList.size()-1)) {
                   setImage(mFilePathList.get(++mNowPosition));
+                  setTitleName(mFilePathList.get(mNowPosition));
+                }
               }
             }
             else if(befor.getX() < after.getX() && (after.getX()-befor.getX()) > SWAIP_X_MOVE_TH)
@@ -236,8 +260,10 @@ public class OneImageViewActivity extends AppCompatActivity {
                 // 左→右へのスワイプ
                 Log.d("SWAIP","右へスワイプ");
                 // 前の画像へ
-                if(mNowPosition > 0)
+                if(mNowPosition > 0) {
                   setImage(mFilePathList.get(--mNowPosition));
+                  setTitleName(mFilePathList.get(mNowPosition));
+                }
               }
             }
             else
@@ -247,6 +273,17 @@ public class OneImageViewActivity extends AppCompatActivity {
             return false;
           }
         });
+  }
+  
+  /**
+   * タイトル設定
+   * @param filePath
+   */
+  private void setTitleName(String filePath)
+  {
+    // タイトル設定
+    String[] splitStr = filePath.split("/",0);
+    setTitle(splitStr[splitStr.length - 1]);
   }
 
 }

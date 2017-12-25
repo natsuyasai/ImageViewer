@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -88,7 +89,26 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
     setupFile(mFolderPath);
   }
 
+
   /**
+   * メニューアイテム選択処理
+   * @param item
+   * @return
+   */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId())
+      {
+        case R.id.folder_menu_remove:
+          break;
+        default:
+          break;
+      }
+
+      return super.onOptionsItemSelected(item);
+    }
+
+    /**
    * グリッドビューにファイル一覧を設定
    * @param folderPath
    */

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item
-        android:id="@+id/folder_menu_move"
+        android:id="@+id/item_menu_move"
         android:title="@string/filee_move"
         />
     <item
-        android:id="@+id/folder_menu_remove"
+        android:id="@+id/item_menu_remove"
         android:title="@string/file_remove"
         />
 

@@ -267,4 +267,19 @@ public class FileManager {
     return imageFilePath;
   }
 
+
+  /**
+   * 指定ファイルの削除
+   * @param filePath
+   * @return
+   */
+  public boolean deleteFile(String filePath)
+  {
+    File file = new File(filePath);
+    return file.delete();
+  }
+  public boolean deleteFile(File filePath)
+  {
+    return filePath.delete();
+  }
 }
