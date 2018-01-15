@@ -85,10 +85,24 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    // ファイル一覧表示
-    setupFile(mFolderPath);
   }
 
+
+  /**
+   * Dispatch onResume() to fragments.  Note that for better inter-operation
+   * with older versions of the platform, at the point of this call the
+   * fragments attached to the activity are <em>not</em> resumed.  This means
+   * that in some cases the previous state may still be saved, not allowing
+   * fragment transactions that modify the state.  To correctly interact
+   * with fragments in their proper state, you should instead override
+   * {@link #onResumeFragments()}.
+   */
+  @Override
+  protected void onResume() {
+    super.onResume();
+    // ファイル一覧再表示
+    setupFile(mFolderPath);
+  }
 
   /**
    * メニューアイテム選択処理

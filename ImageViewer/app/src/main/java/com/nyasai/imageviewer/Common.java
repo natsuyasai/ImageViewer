@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -49,15 +50,21 @@ public class Common {
      */
     public static int getResizeValue(BitmapFactory.Options preOptions)
     {
+      if(preOptions != null) {
         /// メモリ削減対策
         int imageCompSize;
         // 画面縮小サイズ計算
-        if(preOptions.outWidth >= preOptions.outHeight)
-            imageCompSize = (preOptions.outWidth * 4)/ WindowSizeManager.getHeight();
+        if (preOptions.outWidth >= preOptions.outHeight)
+          imageCompSize = (preOptions.outWidth * 4) / WindowSizeManager.getHeight();
         else
-            imageCompSize = (preOptions.outHeight * 4)/ WindowSizeManager.getWidth();
+          imageCompSize = (preOptions.outHeight * 4) / WindowSizeManager.getWidth();
 
         return imageCompSize;
+      }
+      else
+      {
+        return 0;
+      }
     }
 
 
@@ -78,9 +85,10 @@ public class Common {
             preBitmap = BitmapFactory.decodeStream(stream,null,preOptions);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return null;
         }
         try {
-            stream.close();
+          stream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

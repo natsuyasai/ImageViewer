@@ -127,6 +127,13 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  @Override
+  protected void onResume() {
+    super.onResume();
+    // フォルダ一覧再表示
+    setupFile();
+  }
+
   /**
    * メイン画面動作統括部
    */
@@ -136,18 +143,11 @@ public class MainActivity extends AppCompatActivity {
     mfileManager = new FileManager();
 
     // 端末内の画像ファイル一覧を取得し，グリッドビューに設定
-    (new Thread(runnable)).start();
+    // 取得
+    MainActivity.this.mfileManager.getAllFileList();
+    // 設定
+    MainActivity.this.setupFile();
   }
-
-  private Runnable runnable = new Runnable() {
-    @Override
-    public void run() {
-      // 取得
-      MainActivity.this.mfileManager.getAllFileList();
-      // 設定
-      MainActivity.this.setupFile();
-    }
-  };
 
   /***
    * ファイル検索開始
@@ -176,7 +176,9 @@ public class MainActivity extends AppCompatActivity {
     // 許可済
     if(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
     {
-      startMain();
+      if(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        startMain();
+      }
     }
     else // 拒否時
     {
@@ -189,15 +191,21 @@ public class MainActivity extends AppCompatActivity {
    */
   private void requestLocationPermission()
   {
-    if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE))
+    if((ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE))&&
+        (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)))
     {
-      ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},REQUEST_PERMISSION);
+      ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_PERMISSION);
     }
     else
     {
       Toast toast = Toast.makeText(this, "許可されないとアプリが実行できません", Toast.LENGTH_SHORT);
       toast.show();
-      ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,}, REQUEST_PERMISSION);
+      ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
+      if((ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+          ||(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED))
+      {
+        finish();
+      }
     }
   }
 
@@ -212,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (requestCode == REQUEST_PERMISSION) {
       // 使用が許可された
-      if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
         startMain();
         return;
 

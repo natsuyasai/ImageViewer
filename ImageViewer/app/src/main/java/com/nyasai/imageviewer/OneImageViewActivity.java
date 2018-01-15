@@ -36,7 +36,7 @@ public class OneImageViewActivity extends AppCompatActivity {
   // コンテキスト
   private Context mContext;
   // スワイプイベント閾値（速度）
-  private final int SWAIP_X_SPEED_ABS_TH = 2500;
+  private final int SWAIP_X_SPEED_ABS_TH = 1000;
   // スワイプイベント閾値（移動量）
   private final int SWAIP_X_MOVE_TH = 300;
 
@@ -91,7 +91,36 @@ public class OneImageViewActivity extends AppCompatActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId())
     {
-      case R.id.folder_menu_remove:
+      case R.id.item_menu_remove: // ファイル削除
+        // 削除確認
+        new AlertDialog.Builder(this)
+            .setMessage(R.string.file_remove_check)
+            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which) {
+                File file = new File(mFilePathList.get(mNowPosition));
+                // ファイルパスリストから削除するファイルを除き，画像を前のファイルに更新
+                mFilePathList.remove(mNowPosition);
+                file.delete();
+                if(mFilePathList.size() > 0) {
+                  if(mNowPosition < (mFilePathList.size()-1)) {
+                    mNowPosition++;
+                  }
+                  else{
+                    mNowPosition--;
+                  }
+                  setImage(mFilePathList.get(mNowPosition));
+                  setTitleName(mFilePathList.get(mNowPosition));
+                }
+                else
+                {
+                  // フォルダ内の画像が0になればフォルダビューに戻る
+                  finish();
+                }
+              }
+            })
+            .setNegativeButton("Cancel",null)
+            .show();
         break;
       default:
         break;
