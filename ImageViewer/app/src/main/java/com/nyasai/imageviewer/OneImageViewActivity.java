@@ -39,6 +39,8 @@ public class OneImageViewActivity extends AppCompatActivity {
   private final int SWAIP_X_SPEED_ABS_TH = 1000;
   // スワイプイベント閾値（移動量）
   private final int SWAIP_X_MOVE_TH = 300;
+  // タイトルバー状態
+  private boolean mIsTitleBar = true;
 
 
   @SuppressLint("ResourceType")
@@ -57,6 +59,8 @@ public class OneImageViewActivity extends AppCompatActivity {
     // タイトル設定
     String[] splitStr = filePath.split("/",0);
     setTitle(splitStr[splitStr.length - 1]);
+    // タイトルバー非表示
+    changeTitleBarState(false);
 
     // レイアウト設定
     setContentView(R.layout.activity_one_image_view);
@@ -161,6 +165,32 @@ public class OneImageViewActivity extends AppCompatActivity {
     return super.dispatchTouchEvent(ev);
   }
 
+  /**
+   * タイトルバー表示/非表示切り替え
+   */
+  private void changeTitleBarState(){
+    mIsTitleBar = (mIsTitleBar == false) ? true : false;
+    if(mIsTitleBar == true)
+    {
+      getSupportActionBar().show();
+    }
+    else
+    {
+      getSupportActionBar().hide();
+    }
+  }
+  private void changeTitleBarState(boolean isShow){
+    mIsTitleBar = isShow;
+    if(mIsTitleBar == true)
+    {
+      getSupportActionBar().show();
+    }
+    else
+    {
+      getSupportActionBar().hide();
+    }
+  }
+
 
   /**
    * タップイベント関連設定
@@ -206,6 +236,7 @@ public class OneImageViewActivity extends AppCompatActivity {
            */
           @Override
           public boolean onSingleTapConfirmed(MotionEvent e) {
+            changeTitleBarState();
             return false;
           }
 
