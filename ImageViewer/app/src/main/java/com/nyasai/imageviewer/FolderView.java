@@ -113,7 +113,7 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
     public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId())
       {
-        case R.id.folder_menu_remove:
+        case R.id.folder_menu_select:
           break;
         default:
           break;

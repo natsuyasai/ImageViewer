@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">ImageViewer</string>
     <string name="app_home">Home</string>
-    <string name="filee_move">移動</string>
+    <string name="file_move">移動</string>
     <string name="file_remove">削除</string>
+    <string name="file_select">選択</string>
     <string name="file_remove_check">削除しますか?</string>
 </resources>

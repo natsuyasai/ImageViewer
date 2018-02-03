@@ -190,6 +190,7 @@ public class FileManager {
 
   /**
    * 代表画像ファイルパス取得
+   * note.最新順に取得
    * @param cursor
    * @return
    */
@@ -198,8 +199,8 @@ public class FileManager {
     ArrayList<ImageGridViewAdapter.GridViewItem> gridViewItems = new ArrayList<ImageGridViewAdapter.GridViewItem>();
     HashMap<String,Integer> folderPathList = new HashMap<String,Integer>();
 
-    // URI情報の先頭に移動
-    cursor.moveToFirst();
+    // URI情報の末尾に移動
+    cursor.moveToLast();
     int pathIndex = cursor.getColumnIndex(
             MediaStore.Images.Media.DATA);
     int nameIndex = cursor.getColumnIndex(
@@ -211,7 +212,7 @@ public class FileManager {
     Pattern pattern;
     Matcher matcher;
     // ファイル確認
-    while(!cursor.isAfterLast()){
+    while(!cursor.isBeforeFirst()){
       // ファイルパス取得
       filePath = cursor.getString(pathIndex);
       // ファイル名
@@ -231,7 +232,7 @@ public class FileManager {
         item.folderPath = folderPath;
         gridViewItems.add(item);
       }
-      cursor.moveToNext();
+      cursor.moveToPrevious();
     }
 
     return gridViewItems;
@@ -282,4 +283,5 @@ public class FileManager {
   {
     return filePath.delete();
   }
+
 }

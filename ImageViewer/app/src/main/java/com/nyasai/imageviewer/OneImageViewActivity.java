@@ -1,11 +1,16 @@
 package com.nyasai.imageviewer;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -96,41 +101,65 @@ public class OneImageViewActivity extends AppCompatActivity {
     switch (item.getItemId())
     {
       case R.id.item_menu_remove: // ファイル削除
-        // 削除確認
-        new AlertDialog.Builder(this)
-            .setMessage(R.string.file_remove_check)
-            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-              @Override
-              public void onClick(DialogInterface dialog, int which) {
-                File file = new File(mFilePathList.get(mNowPosition));
-                // ファイルパスリストから削除するファイルを除き，画像を前のファイルに更新
-                mFilePathList.remove(mNowPosition);
-                file.delete();
-                if(mFilePathList.size() > 0) {
-                  if(mNowPosition < (mFilePathList.size()-1)) {
-                    mNowPosition++;
-                  }
-                  else{
-                    mNowPosition--;
-                  }
-                  setImage(mFilePathList.get(mNowPosition));
-                  setTitleName(mFilePathList.get(mNowPosition));
-                }
-                else
-                {
-                  // フォルダ内の画像が0になればフォルダビューに戻る
-                  finish();
-                }
-              }
-            })
-            .setNegativeButton("Cancel",null)
-            .show();
+        this.deleteFile();
         break;
       default:
         break;
     }
     
     return super.onOptionsItemSelected(item);
+  }
+
+  // ファイル削除
+  private void deleteFile()
+  {
+    // 削除確認
+    new AlertDialog.Builder(this)
+        .setMessage(R.string.file_remove_check)
+        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            String deleteFilePath =mFilePathList.get(mNowPosition);
+            File file = new File(deleteFilePath);
+            // ファイルパスリストから削除するファイルを除き，画像を前のファイルに更新
+            mFilePathList.remove(mNowPosition);
+            // SQLite更新
+            Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA},
+                MediaStore.Images.Media.DATA + " = ?",
+                new String[]{deleteFilePath},
+                null);
+            if(cursor.getCount() != 0)
+            {
+              cursor.moveToFirst();
+              Uri deleteUli = ContentUris.appendId(
+                  MediaStore.Images.Media.EXTERNAL_CONTENT_URI.buildUpon(),
+                  cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID))).build();
+              getContentResolver().delete(deleteUli,null,null);
+            }
+            file.delete();
+            cursor.close();
+            // ポジション修正
+            if(mFilePathList.size() > 0) {
+              if(mNowPosition < (mFilePathList.size()-1)) {
+                mNowPosition++;
+              }
+              else{
+                mNowPosition--;
+              }
+              // 削除ファイルの前又は後ろのファイルを表示
+              setImage(mFilePathList.get(mNowPosition));
+              setTitleName(mFilePathList.get(mNowPosition));
+            }
+            else
+            {
+              // フォルダ内の画像が0になればフォルダビューに戻る
+              finish();
+            }
+          }
+        })
+        .setNegativeButton("Cancel",null)
+        .show();
   }
   
 

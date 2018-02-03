@@ -2,12 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/folder_menu_move"
-        android:title="@string/filee_move"
-        />
-    <item
-        android:id="@+id/folder_menu_remove"
-        android:title="@string/file_remove"
+        android:id="@+id/folder_menu_select"
+        android:title="@string/file_select"
         />
 
 </menu>
