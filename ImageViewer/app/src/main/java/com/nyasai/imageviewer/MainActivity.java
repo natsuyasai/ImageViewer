@@ -37,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
   private GridViewOperation mGVOeration;
   // モード
   private int mNowMode;
+  // 初回起動フラグ
+  // note.権限取得待ちのときにonResumeが呼び出される為，権限取得時はonResumeの際になにも実行しないようにフラグで防ぐ
+  private boolean mIsFirstExec = true;
 
   @Override
   /**
@@ -130,8 +133,10 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    // フォルダ一覧再表示
-    setupFile();
+    if (mIsFirstExec == false) {
+      // フォルダ一覧再表示
+      setupFile();
+    }
   }
 
   /**
@@ -147,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
     MainActivity.this.mfileManager.getAllFileList();
     // 設定
     MainActivity.this.setupFile();
+    mIsFirstExec = false;
   }
 
   /***
@@ -193,8 +199,8 @@ public class MainActivity extends AppCompatActivity {
    */
   private void requestLocationPermission()
   {
-    if((ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE))&&
-        (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)))
+    if((ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE) == false) ||
+        (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == false))
     {
       ActivityCompat.requestPermissions(MainActivity.this,
           new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_PERMISSION);
@@ -224,11 +230,14 @@ public class MainActivity extends AppCompatActivity {
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (requestCode == REQUEST_PERMISSION) {
       // 使用が許可された
-      if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+      if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+      {
         startMain();
         return;
 
-      } else {
+      }
+      else
+      {
         // それでも拒否された時の対応
         Toast toast = Toast.makeText(this, "ファイルへのアクセスが許可されていません", Toast.LENGTH_SHORT);
         toast.show();
