@@ -141,12 +141,9 @@ public class OneImageViewActivity extends AppCompatActivity {
             cursor.close();
             // ポジション修正
             if(mFilePathList.size() > 0) {
-              if(mNowPosition < (mFilePathList.size()-1)) {
-                mNowPosition++;
-              }
-              else{
+              // 複数ファイルが存在する時に先頭画像を削除する場合は，次に先頭になるファイルを選択
+              if(mNowPosition !=0)
                 mNowPosition--;
-              }
               // 削除ファイルの前又は後ろのファイルを表示
               setImage(mFilePathList.get(mNowPosition));
               setTitleName(mFilePathList.get(mNowPosition));
