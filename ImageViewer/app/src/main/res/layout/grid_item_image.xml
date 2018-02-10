@@ -22,5 +22,16 @@
         android:textSize="12dp"
         />
 
+    <CheckBox
+        android:id="@+id/gv_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:focusable="false"
+        android:focusableInTouchMode="true"
+        android:theme="@style/GVCheckBox"
+        android:visibility="invisible"
+        />
+
 
 </RelativeLayout>

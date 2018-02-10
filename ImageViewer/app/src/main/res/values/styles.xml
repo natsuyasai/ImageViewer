@@ -8,4 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- チェックボックス用テーマ -->
+    <style name="GVCheckBox" parent="Theme.AppCompat.Light">
+        <!-- 枠線 -->
+        <item name="colorControlNormal">@color/Green</item>
+        <!-- チェック時の色 -->
+        <item name="colorControlActivated">@color/colorAccent</item>
+    </style>
+
 </resources>

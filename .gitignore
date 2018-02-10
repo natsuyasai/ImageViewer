@@ -25,3 +25,10 @@ app/build/
 
 !.idea/gradle.xml
 !.idea/runConfigurations/*.xml
+/ImageViewer/projectFilesBackup/.idea/workspace.xml
+/ImageViewer/.idea/compiler.xml
+/ImageViewer/.idea/encodings.xml
+/ImageViewer/.idea/gradle.xml
+/ImageViewer/.idea/misc.xml
+/ImageViewer/.idea/modules.xml
+/ImageViewer/.idea/runConfigurations.xml
