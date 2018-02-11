@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -110,6 +112,11 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
     super.onResume();
     // ファイル一覧再表示
     setupFile(mFolderPath);
+    //
+    if(mIsSelect == true)
+    {
+      doSelectMenu(mMenu);
+    }
   }
 
   /**
@@ -149,17 +156,15 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
       changeMenuVisibles(menu,false);
       mIsSelect = true;
       // チェックボックスON
-      mGridView.getCount();
-      for(int i=0; i<mGridView.getCount(); i++)
-      {
-      }
-
+      setGridViewChekBox(View.VISIBLE);
     }
     else // 選択メニュー選択中
     {
       // 選択中メニューを非表示
       changeMenuVisibles(menu,true);
       mIsSelect = false;
+      // チェックボックスOFF
+      setGridViewChekBox(View.INVISIBLE);
     }
   }
 
@@ -178,6 +183,21 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
     menuRemove.setVisible(!selectVisible);
     menuMove.setVisible(!selectVisible);
     menuChancel.setVisible(!selectVisible);
+  }
+
+  private void setGridViewChekBox(int visible)
+  {
+    for(int i=0; i<mGridView.getChildCount(); i++)
+    {
+      ViewGroup gvChild = (ViewGroup)mGridView.getChildAt(i);
+      for(int j=0; j<gvChild.getChildCount(); j++)
+      {
+        if(gvChild.getChildAt(j) instanceof CheckBox)
+        {
+          gvChild.getChildAt(j).setVisibility(visible);
+        }
+      }
+    }
   }
 
     /**
