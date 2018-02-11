@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -25,6 +26,10 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
   private String mFolderPath;
   // イベント通知用
   private ImplicitEventNotifycate mIntentNotifycate;
+  // メニュー
+  private Menu mMenu;
+  // グリッドビュー
+  private GridView mGridView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,8 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
     mIntentNotifycate = new ImplicitEventNotifycate();
     mIntentNotifycate.setImplicitIntentListener(this);
 
+    // グリッドビュー取得
+    mGridView = findViewById(R.id.gridView_sub);
 
     // グリッドビュークリックスナ登録
     mGVOeration = new GridViewOperation(this,mIntentNotifycate,(GridView)findViewById(R.id.gridView_sub),intent.getIntExtra(Constants.MODE,0));
@@ -62,6 +69,7 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.folder_menu,menu);
+    mMenu = menu;
     return super.onCreateOptionsMenu(menu);
   }
 
@@ -109,18 +117,68 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
    * @param item
    * @return
    */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId())
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId())
+    {
+      case R.id.folder_menu_select:     // 選択
+        break;
+      case R.id.folder_menu_move:       // 移動
+        break;
+      case R.id.folder_menu_remove:     // 削除
+        break;
+      case R.id.folder_select_chancel:  // 選択キャンセル
+        break;
+      default:
+        break;
+    }
+    doSelectMenu(mMenu);
+    return super.onOptionsItemSelected(item);
+  }
+
+  /**
+   * 選択メニュー選択時処理
+   */
+  private boolean mIsSelect = false; // メニュー「選択」項目選択状態
+  private void doSelectMenu(Menu menu)
+  {
+    // 選択メニュー未選択
+    if(mIsSelect == false)
+    {
+      // 選択中メニューに置き換え
+      changeMenuVisibles(menu,false);
+      mIsSelect = true;
+      // チェックボックスON
+      mGridView.getCount();
+      for(int i=0; i<mGridView.getCount(); i++)
       {
-        case R.id.folder_menu_select:
-          break;
-        default:
-          break;
       }
 
-      return super.onOptionsItemSelected(item);
     }
+    else // 選択メニュー選択中
+    {
+      // 選択中メニューを非表示
+      changeMenuVisibles(menu,true);
+      mIsSelect = false;
+    }
+  }
+
+  /**
+   * 選択メニュー切替
+   * @param menu
+   * @param selectVisible
+   */
+  private void changeMenuVisibles(Menu menu, boolean selectVisible)
+  {
+    MenuItem menuSelect = menu.findItem(R.id.folder_menu_select);
+    MenuItem menuRemove = menu.findItem(R.id.folder_menu_remove);
+    MenuItem menuMove = menu.findItem(R.id.folder_menu_move);
+    MenuItem menuChancel = menu.findItem(R.id.folder_select_chancel);
+    menuSelect.setVisible(selectVisible);
+    menuRemove.setVisible(!selectVisible);
+    menuMove.setVisible(!selectVisible);
+    menuChancel.setVisible(!selectVisible);
+  }
 
     /**
    * グリッドビューにファイル一覧を設定
@@ -148,8 +206,7 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
     ImageGridViewAdapter adapter = new ImageGridViewAdapter(ContextManager.getContext(),
         gridViewItems,
         R.layout.grid_item_image);
-    GridView gridView = (GridView)findViewById(R.id.gridView_sub);
-    gridView.setAdapter(adapter);
+    mGridView.setAdapter(adapter);
   }
 
   /**

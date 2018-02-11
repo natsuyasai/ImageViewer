@@ -66,8 +66,8 @@ public class GridViewOperation implements AdapterView.OnItemClickListener, View.
    * @param id       The row id of the item that was clicked.
    */
   @Override
-  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+  public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+  {
     if(view != null)
     {
       // 指定座標のアイテム取得

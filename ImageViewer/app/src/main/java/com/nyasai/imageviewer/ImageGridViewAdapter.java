@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,6 +18,8 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 画像表示グリッドビュー用アダプタ
@@ -31,13 +34,14 @@ public class ImageGridViewAdapter extends BaseAdapter {
   private ArrayList<GridViewItem> mItemList;
   // リソース
   private int mResource = 0;
+  // アイテムビュー
+  Map<Integer, View> mPositionView = new HashMap<Integer, View>();
   /**
    * グリッドビュー表示用
    */
   public static class GridViewItem {
     public String imagePath;
     public String folderPath;
-
   }
 
   /**
@@ -89,6 +93,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
   {
     ImageView imageView;
     TextView textView;
+    CheckBox checkBox;
   }
 
   /**
@@ -110,16 +115,19 @@ public class ImageGridViewAdapter extends BaseAdapter {
     ViewHolder holder;
     ImageView imageView ;
     TextView textView;
+    CheckBox checkBox;
     // ビューが空の場合
     if(convertView == null)
     {
       convertView = mLayoutInflater.from(mContext).inflate(R.layout.grid_item_image,null);
       imageView = (ImageView) convertView.findViewById(R.id.gv_image);
       textView = (TextView) convertView.findViewById(R.id.gv_text);
+      checkBox = (CheckBox)convertView.findViewById(R.id.gv_checkbox);
       // 現在のコマの参照を保持
       holder = new ViewHolder();
       holder.imageView =imageView;
       holder.textView = textView;
+      holder.checkBox = checkBox;
       convertView.setTag(holder);
     }
     else
@@ -128,6 +136,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
       holder = (ViewHolder)convertView.getTag();
       imageView = holder.imageView;
       textView = holder.textView;
+      checkBox = holder.checkBox;
     }
 
     // ビューサイズ設定
@@ -136,6 +145,8 @@ public class ImageGridViewAdapter extends BaseAdapter {
     // 画像を設定
     if(imageView != null)
     {
+      // ビューを保持
+      mPositionView.put(i,convertView);
       // テキストビュー設定
       textView.setText(splitStr[splitStr.length - 1]);
 
@@ -237,6 +248,17 @@ public class ImageGridViewAdapter extends BaseAdapter {
     params.width = WindowSizeManager.getWidth() / 2;
     params.height = (WindowSizeManager.getHeight() / 4) - 10;
     imageView.setLayoutParams(params);
+  }
+
+  /**
+   * 指定位置のビューを返す
+   * @param pos
+   * @return
+   */
+  public View getViewAtPosition(int pos)
+  {
+    return mPositionView.get(pos);
+
   }
 
 }

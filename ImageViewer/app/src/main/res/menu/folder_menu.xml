@@ -5,5 +5,20 @@
         android:id="@+id/folder_menu_select"
         android:title="@string/file_select"
         />
+    <item
+        android:id="@+id/folder_menu_remove"
+        android:title="@string/file_remove"
+        android:visible="false"
+        />
+    <item
+        android:id="@+id/folder_menu_move"
+        android:title="@string/file_move"
+        android:visible="false"
+        />
+    <item
+        android:id="@+id/folder_select_chancel"
+        android:title="@string/select_chancel"
+        android:visible="false"
+        />
 
 </menu>
