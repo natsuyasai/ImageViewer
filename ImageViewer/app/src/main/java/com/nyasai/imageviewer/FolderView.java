@@ -156,7 +156,7 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
       changeMenuVisibles(menu,false);
       mIsSelect = true;
       // チェックボックスON
-      setGridViewChekBox(View.VISIBLE);
+      setGridViewChekBox(View.VISIBLE,false);
     }
     else // 選択メニュー選択中
     {
@@ -164,7 +164,7 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
       changeMenuVisibles(menu,true);
       mIsSelect = false;
       // チェックボックスOFF
-      setGridViewChekBox(View.INVISIBLE);
+      setGridViewChekBox(View.INVISIBLE,true);
     }
   }
 
@@ -185,7 +185,7 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
     menuChancel.setVisible(!selectVisible);
   }
 
-  private void setGridViewChekBox(int visible)
+  private void setGridViewChekBox(int visible, boolean checked)
   {
     for(int i=0; i<mGridView.getChildCount(); i++)
     {
@@ -195,6 +195,7 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
         if(gvChild.getChildAt(j) instanceof CheckBox)
         {
           gvChild.getChildAt(j).setVisibility(visible);
+          ((CheckBox) gvChild.getChildAt(j)).setChecked(checked);
         }
       }
     }
