@@ -13,6 +13,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -21,6 +24,7 @@ import java.util.ArrayList;
 
 import static com.nyasai.imageviewer.Constants.MODE_DEF;
 import static com.nyasai.imageviewer.Constants.MODE_IMPLICIT_INTENT;
+import static com.nyasai.imageviewer.Constants.REQ_CODE_SUB_ACT;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
   // コンテキスト
   private Context mContext;
   // グリッドビュー操作
-  private GridViewOperation mGVOeration;
+  private GridViewClickListner mGVClickListner;
   // モード
   private int mNowMode;
   // 初回起動フラグ
@@ -63,14 +67,14 @@ public class MainActivity extends AppCompatActivity {
     Intent intent = getIntent();
     // グリッドビュークリックスナ登録
     if(intent.getAction().equals("android.intent.action.MAIN")) {
-      mGVOeration = new GridViewOperation(this, null, (GridView) findViewById(R.id.gridViewHome), MODE_DEF);
+      mGVClickListner = new GridViewClickListner(this, (GridView) findViewById(R.id.gridViewHome), MODE_DEF);
       mNowMode = MODE_DEF;
     }
     else {
-      mGVOeration = new GridViewOperation(this,null,(GridView) findViewById(R.id.gridViewHome), MODE_IMPLICIT_INTENT);
+      mGVClickListner = new GridViewClickListner(this,(GridView) findViewById(R.id.gridViewHome), MODE_IMPLICIT_INTENT);
       mNowMode = MODE_IMPLICIT_INTENT;
     }
-    ((GridView) findViewById(R.id.gridViewHome)).setOnItemClickListener(mGVOeration);
+    ((GridView) findViewById(R.id.gridViewHome)).setOnItemClickListener(mGVClickListner);
 
     // android6.0以上の場合は権限許可チェック
     if(Build.VERSION.SDK_INT >= 23)
@@ -246,5 +250,101 @@ public class MainActivity extends AppCompatActivity {
   }
   //endregion
 
+  /**
+   * GridViewタップイベント定義用クラス
+   */
+  private class GridViewClickListner implements AdapterView.OnItemClickListener, View.OnTouchListener
+  {
+    // 対象グリッドビュー
+    private GridView mGridView;
+    // 実行中アクティビティ
+    private Activity mActivity;
+    // ファイルパスリスト
+    private ArrayList<String> mFilePathList;
+    // 動作モード(0:通常起動,1:暗黙インテントによる起動)
+    private int mMode;
+
+
+    /**
+     * コンストラクタ
+     */
+    public GridViewClickListner(Activity activity, GridView gridView, int mode)
+    {
+      mActivity = activity;
+      mGridView = gridView;
+      mMode = mode;
+    }
+
+    /**
+     * グリッドビューのファイルパスリスト設定
+     */
+    public void setFilePathList(ArrayList<String> list)
+    {
+      mFilePathList = list;
+    }
+
+    /**
+     * アイテムタップ時
+     * Called when a touch event is dispatched to a view. This allows listeners to
+     * get a chance to respond before the target view.
+     *
+     * @param v     The view the touch event has been dispatched to.
+     * @param event The MotionEvent object containing full information about
+     *              the event.
+     * @return True if the listener has consumed the event, false otherwise.
+     */
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+      // タップイベント判別
+      switch (event.getAction())
+      {
+        case MotionEvent.ACTION_DOWN:
+          break;
+        case MotionEvent.ACTION_UP:
+          break;
+        case MotionEvent.ACTION_CANCEL:
+          break;
+        default:
+          break;
+      }
+      return false;
+    }
+
+    /**
+     * Callback method to be invoked when an item in this AdapterView has
+     * been clicked.
+     * <p>
+     * Implementers can call getItemAtPosition(position) if they need
+     * to access the data associated with the selected item.
+     *
+     * @param parent   The AdapterView where the click happened.
+     * @param view     The view within the AdapterView that was clicked (this
+     *                 will be a view provided by the adapter)
+     * @param position The position of the view in the adapter.
+     * @param id       The row id of the item that was clicked.
+     */
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+      if(view != null) {
+        // 指定座標のアイテム取得
+        ImageGridViewAdapter.GridViewItem item = (ImageGridViewAdapter.GridViewItem) parent.getItemAtPosition(position);
+        createSubFolderView(item.folderPath);
+      }
+    }
+
+    /**
+     * 画像描画用ビュー新規作成(サブアクティビティ生成)
+     * @param subFordlerPath
+     */
+    private void createSubFolderView(String subFordlerPath)
+    {
+      // フォルダ単位ビュー遷移
+      Intent intent = new Intent(ContextManager.getContext(),FolderView.class);
+      intent.putExtra(Constants.FOLDER_PATH, subFordlerPath);
+      intent.putExtra(Constants.MODE, mMode);
+      //ContextManager.getContext().startActivity(intent);
+      mActivity.startActivityForResult(intent,REQ_CODE_SUB_ACT);
+    }
+  }
 
 }

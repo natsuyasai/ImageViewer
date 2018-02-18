@@ -1,13 +1,16 @@
 package com.nyasai.imageviewer;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.GridView;
 
@@ -18,16 +21,14 @@ import javax.security.auth.callback.Callback;
 /**
  * 1フォルダ単位の画像一覧描画用ビュー
  */
-public class FolderView extends AppCompatActivity implements Callback ,ImplicitIntentEventListener {
+public class FolderView extends AppCompatActivity implements Callback {
 
   // ファイルマネージャ
   private FileManager mfileManager;
   // グリッドビュー操作用
-  private GridViewOperation mGVOeration;
+  private GridViewClickListner mGVClickListner;
   // 現表示中フォルダパス
   private String mFolderPath;
-  // イベント通知用
-  private ImplicitEventNotifycate mIntentNotifycate;
   // メニュー
   private Menu mMenu;
   // グリッドビュー
@@ -42,16 +43,12 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
     Intent intent = getIntent();
     mFolderPath = intent.getStringExtra(Constants.FOLDER_PATH);
 
-    // イベント通知取得設定
-    mIntentNotifycate = new ImplicitEventNotifycate();
-    mIntentNotifycate.setImplicitIntentListener(this);
-
     // グリッドビュー取得
     mGridView = findViewById(R.id.gridView_sub);
 
     // グリッドビュークリックスナ登録
-    mGVOeration = new GridViewOperation(this,mIntentNotifycate,(GridView)findViewById(R.id.gridView_sub),intent.getIntExtra(Constants.MODE,0));
-    ((GridView) findViewById(R.id.gridView_sub)).setOnItemClickListener(mGVOeration);
+    mGVClickListner = new GridViewClickListner(this,(GridView)findViewById(R.id.gridView_sub));
+    ((GridView) findViewById(R.id.gridView_sub)).setOnItemClickListener(mGVClickListner);
 
     // タイトルバー変更
     String[] splitStr = mFolderPath.split("/",0);
@@ -61,18 +58,6 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
 
     // 画像描画
     (new Thread(runnable)).start();
-  }
-
-  /**
-   * メニュー設定
-   * @param menu
-   * @return
-   */
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.folder_menu,menu);
-    mMenu = menu;
-    return super.onCreateOptionsMenu(menu);
   }
 
   /**
@@ -117,6 +102,19 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
     {
       doSelectMenu(mMenu);
     }
+  }
+
+  //region メニュー関連
+  /**
+   * メニュー設定
+   * @param menu
+   * @return
+   */
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.folder_menu,menu);
+    mMenu = menu;
+    return super.onCreateOptionsMenu(menu);
   }
 
   /**
@@ -185,6 +183,11 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
     menuChancel.setVisible(!selectVisible);
   }
 
+  /**
+   * チェックボックス表示/非表示切り替え
+   * @param visible
+   * @param checked
+   */
   private void setGridViewChekBox(int visible, boolean checked)
   {
     for(int i=0; i<mGridView.getChildCount(); i++)
@@ -221,7 +224,7 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
     }
 
     // ファイルパスリストを設定
-    mGVOeration.setFilePathList(filePath);
+    mGVClickListner.setFilePathList(filePath);
 
     // グリッドビューに設定
     ImageGridViewAdapter adapter = new ImageGridViewAdapter(ContextManager.getContext(),
@@ -229,17 +232,102 @@ public class FolderView extends AppCompatActivity implements Callback ,ImplicitI
         R.layout.grid_item_image);
     mGridView.setAdapter(adapter);
   }
+  //endregion
 
   /**
-   * インテントリターン設定
-   *
-   * @param object
+   * GridViewタップイベント定義用クラス
    */
-  @Override
-  public void returnIntentEvent(Object object) {
-    Intent reslt = new Intent();
-    reslt.putExtra("SubSctivity",(String)object);
-    setResult(Activity.RESULT_OK,reslt);
-    finish();
+  private class GridViewClickListner implements AdapterView.OnItemClickListener, View.OnTouchListener
+  {
+    // 対象グリッドビュー
+    private GridView mGridView;
+    // 実行中アクティビティ
+    private Activity mActivity;
+    // ファイルパスリスト
+    private ArrayList<String> mFilePathList;
+
+
+    /**
+     * コンストラクタ
+     */
+    public GridViewClickListner(Activity activity , GridView gridView)
+    {
+      mActivity = activity;
+      mGridView = gridView;
+    }
+
+    /**
+     * グリッドビューのファイルパスリスト設定
+     */
+    public void setFilePathList(ArrayList<String> list)
+    {
+      mFilePathList = list;
+    }
+
+    /**
+     * アイテムタップ時
+     * Called when a touch event is dispatched to a view. This allows listeners to
+     * get a chance to respond before the target view.
+     *
+     * @param v     The view the touch event has been dispatched to.
+     * @param event The MotionEvent object containing full information about
+     *              the event.
+     * @return True if the listener has consumed the event, false otherwise.
+     */
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+      // タップイベント判別
+      switch (event.getAction())
+      {
+        case MotionEvent.ACTION_DOWN:
+          break;
+        case MotionEvent.ACTION_UP:
+          break;
+        case MotionEvent.ACTION_CANCEL:
+          break;
+        default:
+          break;
+      }
+      return false;
+    }
+
+    /**
+     * Callback method to be invoked when an item in this AdapterView has
+     * been clicked.
+     * <p>
+     * Implementers can call getItemAtPosition(position) if they need
+     * to access the data associated with the selected item.
+     *
+     * @param parent   The AdapterView where the click happened.
+     * @param view     The view within the AdapterView that was clicked (this
+     *                 will be a view provided by the adapter)
+     * @param position The position of the view in the adapter.
+     * @param id       The row id of the item that was clicked.
+     */
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+      if(view != null) {
+        // 指定座標のアイテム取得
+        ImageGridViewAdapter.GridViewItem item = (ImageGridViewAdapter.GridViewItem) parent.getItemAtPosition(position);
+        createOneImageView(position, item.imagePath);
+      }
+    }
+
+    /**
+     * 画像描画用ビュー新規作成(サブアクティビティ生成)
+     */
+    private void createOneImageView(int position, String filePath)
+    {
+      // 1ファイルビュー遷移
+      if(mFilePathList != null) {
+        Intent intent = new Intent(ContextManager.getContext(), OneImageViewActivity.class);
+        intent.putExtra(Constants.FILE_PATH, filePath);
+        intent.putExtra(Constants.FILE_POSITION,position);
+        intent.putStringArrayListExtra(Constants.FILE_PATH_LIST, mFilePathList);
+        ContextManager.getContext().startActivity(intent);
+      }
+    }
   }
+
+
 }
