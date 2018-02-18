@@ -3,8 +3,10 @@ package com.nyasai.imageviewer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Debug;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -127,14 +129,19 @@ public class FolderView extends AppCompatActivity implements Callback {
     switch (item.getItemId())
     {
       case R.id.folder_menu_select:     // 選択
+        mGVClickListner.setCheckable(true); // 選択状態に設定
         break;
       case R.id.folder_menu_move:       // 移動
+        mGVClickListner.setCheckable(false);  // 非選択状態に設定
         break;
       case R.id.folder_menu_remove:     // 削除
+        mGVClickListner.setCheckable(false);  // 非選択状態に設定
         break;
       case R.id.folder_select_chancel:  // 選択キャンセル
+        mGVClickListner.setCheckable(false);  // 非選択状態に設定
         break;
       default:
+        mGVClickListner.setCheckable(false);  // 非選択状態に設定
         break;
     }
     doSelectMenu(mMenu);
@@ -153,7 +160,7 @@ public class FolderView extends AppCompatActivity implements Callback {
       // 選択中メニューに置き換え
       changeMenuVisibles(menu,false);
       mIsSelect = true;
-      // チェックボックスON
+      // チェックボックス表示
       setGridViewChekBox(View.VISIBLE,false);
     }
     else // 選択メニュー選択中
@@ -161,8 +168,8 @@ public class FolderView extends AppCompatActivity implements Callback {
       // 選択中メニューを非表示
       changeMenuVisibles(menu,true);
       mIsSelect = false;
-      // チェックボックスOFF
-      setGridViewChekBox(View.INVISIBLE,true);
+      // チェックボックス非表示
+      setGridViewChekBox(View.INVISIBLE,false);
     }
   }
 
@@ -190,19 +197,20 @@ public class FolderView extends AppCompatActivity implements Callback {
    */
   private void setGridViewChekBox(int visible, boolean checked)
   {
-    for(int i=0; i<mGridView.getChildCount(); i++)
+    for(int i=0; i<mGridView.getChildCount(); i++) // グリッドビューの要素数
     {
       ViewGroup gvChild = (ViewGroup)mGridView.getChildAt(i);
-      for(int j=0; j<gvChild.getChildCount(); j++)
+      for(int j=0; j<gvChild.getChildCount(); j++) // グリッドビューの1要素内のアイテム探索
       {
         if(gvChild.getChildAt(j) instanceof CheckBox)
         {
           gvChild.getChildAt(j).setVisibility(visible);
-          ((CheckBox) gvChild.getChildAt(j)).setChecked(checked);
+          ((CheckBox) gvChild.getChildAt(j)).setChecked(false);
         }
       }
     }
   }
+  //endregion
 
     /**
    * グリッドビューにファイル一覧を設定
@@ -232,7 +240,6 @@ public class FolderView extends AppCompatActivity implements Callback {
         R.layout.grid_item_image);
     mGridView.setAdapter(adapter);
   }
-  //endregion
 
   /**
    * GridViewタップイベント定義用クラス
@@ -245,7 +252,8 @@ public class FolderView extends AppCompatActivity implements Callback {
     private Activity mActivity;
     // ファイルパスリスト
     private ArrayList<String> mFilePathList;
-
+    // チェック状態
+    private boolean mIsCheckable;
 
     /**
      * コンストラクタ
@@ -254,6 +262,7 @@ public class FolderView extends AppCompatActivity implements Callback {
     {
       mActivity = activity;
       mGridView = gridView;
+      mIsCheckable = false;
     }
 
     /**
@@ -263,6 +272,17 @@ public class FolderView extends AppCompatActivity implements Callback {
     {
       mFilePathList = list;
     }
+
+    /**
+     * 選択状態の変更
+     * @param checkable
+     */
+    public void setCheckable(boolean checkable)
+    {
+      mIsCheckable = checkable;
+    }
+
+
 
     /**
      * アイテムタップ時
@@ -305,11 +325,35 @@ public class FolderView extends AppCompatActivity implements Callback {
      * @param id       The row id of the item that was clicked.
      */
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-      if(view != null) {
-        // 指定座標のアイテム取得
-        ImageGridViewAdapter.GridViewItem item = (ImageGridViewAdapter.GridViewItem) parent.getItemAtPosition(position);
-        createOneImageView(position, item.imagePath);
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+    {
+      if(view != null)
+      {
+        // 非チェック状態
+        if(mIsCheckable == false)
+        {
+          // 指定座標のアイテム取得
+          ImageGridViewAdapter.GridViewItem item = (ImageGridViewAdapter.GridViewItem) parent.getItemAtPosition(position);
+          createOneImageView(position, item.imagePath);
+        }
+        else // 選択状態ならば，チェックボックスの状態を変更する
+        {
+            // グリッドビューの子要素取得
+            // TODO:落ちる
+/*            ViewGroup gvChild = (ViewGroup) parent.getChildAt(position);
+            if(gvChild != null)
+            {
+              for (int j = 0; j < gvChild.getChildCount(); j++) // グリッドビューの1要素内のアイテム探索
+              {
+                if (gvChild.getChildAt(j) instanceof CheckBox) {
+                  if (((CheckBox) gvChild.getChildAt(j)).isChecked() == true)
+                    ((CheckBox) gvChild.getChildAt(j)).setChecked(false);
+                  else
+                    ((CheckBox) gvChild.getChildAt(j)).setChecked(true);
+                }
+              }
+            }*/
+        }
       }
     }
 

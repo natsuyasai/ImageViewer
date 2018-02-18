@@ -34,8 +34,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
   private ArrayList<GridViewItem> mItemList;
   // リソース
   private int mResource = 0;
-  // アイテムビュー
-  Map<Integer, View> mPositionView = new HashMap<Integer, View>();
+
   /**
    * グリッドビュー表示用
    */
@@ -109,47 +108,34 @@ public class ImageGridViewAdapter extends BaseAdapter {
     GridViewItem gridViewItem = mItemList.get(i);
     String imageFilePath = gridViewItem.imagePath;
     String imageFolderPath = gridViewItem.folderPath;
-    File imageFile = new File(imageFilePath);
     String[] splitStr = imageFolderPath.split("/",0); // ファイル名リスト
 
     ViewHolder holder;
-    ImageView imageView ;
-    TextView textView;
-    CheckBox checkBox;
     // ビューが空の場合
     if(convertView == null)
     {
-      convertView = mLayoutInflater.from(mContext).inflate(R.layout.grid_item_image,null);
-      imageView = (ImageView) convertView.findViewById(R.id.gv_image);
-      textView = (TextView) convertView.findViewById(R.id.gv_text);
-      checkBox = (CheckBox)convertView.findViewById(R.id.gv_checkbox);
       // 現在のコマの参照を保持
       holder = new ViewHolder();
-      holder.imageView =imageView;
-      holder.textView = textView;
-      holder.checkBox = checkBox;
+      convertView = mLayoutInflater.from(mContext).inflate(R.layout.grid_item_image,null);
+      holder.imageView = (ImageView) convertView.findViewById(R.id.gv_image);
+      holder.textView = (TextView) convertView.findViewById(R.id.gv_text);
+      holder.checkBox = (CheckBox)convertView.findViewById(R.id.gv_checkbox);
       convertView.setTag(holder);
+      // テキストビュー設定
+      holder.textView.setText(splitStr[splitStr.length - 1]);
     }
     else
     {
       // 保持されていればそれを使用
       holder = (ViewHolder)convertView.getTag();
-      imageView = holder.imageView;
-      textView = holder.textView;
-      checkBox = holder.checkBox;
     }
 
     // ビューサイズ設定
-    setGridViewSize(imageView);
+    setGridViewSize(holder.imageView);
 
     // 画像を設定
-    if(imageView != null)
+    if(holder.imageView != null)
     {
-      // ビューを保持
-      mPositionView.put(i,convertView);
-      // テキストビュー設定
-      textView.setText(splitStr[splitStr.length - 1]);
-
       // 画像設定
       Picasso.Builder builder = new Picasso.Builder(mContext);
       // エラー発生時，エラー内容を表示させる
@@ -165,12 +151,11 @@ public class ImageGridViewAdapter extends BaseAdapter {
       if(resizeVal != 0) {
         // 画像の読み込み，設定
         builder.build()
-            .load(imageFile)
+            .load(new File(imageFilePath))
             .resize(preOptions.outWidth / resizeVal, preOptions.outHeight / resizeVal)
-            .into(imageView, new Callback() {
+            .into(holder.imageView, new Callback() {
               @Override
               public void onSuccess() {
-                Log.d("getView", "Success");
               }
               @Override
               public void onError() {
@@ -248,17 +233,6 @@ public class ImageGridViewAdapter extends BaseAdapter {
     params.width = WindowSizeManager.getWidth() / 2;
     params.height = (WindowSizeManager.getHeight() / 4) - 10;
     imageView.setLayoutParams(params);
-  }
-
-  /**
-   * 指定位置のビューを返す
-   * @param pos
-   * @return
-   */
-  public View getViewAtPosition(int pos)
-  {
-    return mPositionView.get(pos);
-
   }
 
 }

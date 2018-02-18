@@ -276,14 +276,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * グリッドビューのファイルパスリスト設定
-     */
-    public void setFilePathList(ArrayList<String> list)
-    {
-      mFilePathList = list;
-    }
-
-    /**
      * アイテムタップ時
      * Called when a touch event is dispatched to a view. This allows listeners to
      * get a chance to respond before the target view.
