@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -92,6 +93,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
   {
     ImageView imageView;
     TextView textView;
+    EditText editText;
     CheckBox checkBox;
   }
 
@@ -120,9 +122,12 @@ public class ImageGridViewAdapter extends BaseAdapter {
       holder.imageView = (ImageView) convertView.findViewById(R.id.gv_image);
       holder.textView = (TextView) convertView.findViewById(R.id.gv_text);
       holder.checkBox = (CheckBox)convertView.findViewById(R.id.gv_checkbox);
+      holder.editText = (EditText)convertView.findViewById(R.id.gv_editText);
       convertView.setTag(holder);
       // テキストビュー設定
       holder.textView.setText(splitStr[splitStr.length - 1]);
+      // ファイルパス保持
+      holder.editText.setText(imageFilePath);
     }
     else
     {

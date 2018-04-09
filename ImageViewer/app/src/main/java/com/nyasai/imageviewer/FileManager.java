@@ -1,7 +1,9 @@
 package com.nyasai.imageviewer;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
@@ -51,7 +53,7 @@ public class FileManager {
     // 画像ファイル一覧取得
     loadImageFileUri();
     // 上記で取得した画像ファイル一覧(URI)からフォルダリストを取得
-    createFolderPathList(mCursor);
+    createFolderPathList();
   }
 
   /**
@@ -78,54 +80,51 @@ public class FileManager {
 
   /**
    * フォルダパス一覧取得
-   * @param cursor
    * @return
    */
-  private void createFolderPathList(Cursor cursor)
+  private void createFolderPathList()
   {
-    mfolderPathList = getFolderPaths(cursor);
+    mfolderPathList = createFolderPaths();
   }
 
   /**
    * フォルダパスリスト取得
-   * 引数で渡された情報に対して処理を行う
-   * @param cursor
    * @return
    */
-  public ArrayList<String> getFolderPaths(Cursor cursor)
+  public ArrayList<String> createFolderPaths()
   {
     // フォルダパスリスト
     ArrayList<String > folderPathList = new ArrayList<String>();
     // URI情報の先頭に移動
-    cursor.moveToFirst();
-    int pathIndex = cursor.getColumnIndex(
+    mCursor.moveToFirst();
+    int pathIndex = mCursor.getColumnIndex(
         MediaStore.Images.Media.DATA);
-    int nameIndex = cursor.getColumnIndex(
+    int nameIndex = mCursor.getColumnIndex(
         MediaStore.Images.Media.DISPLAY_NAME);
     String filePath = "";
     String folderPath = "";
     String regex = "";
     Pattern pattern;
     Matcher matcher;
-    while(!cursor.isAfterLast()){
+    while(!mCursor.isAfterLast()){
       // ファイルパス取得
-      filePath = cursor.getString(pathIndex);
+      filePath = mCursor.getString(pathIndex);
       // ファイル名取得
-      regex = "/"+cursor.getString(nameIndex);
+      regex = "/"+mCursor.getString(nameIndex);
       // パスからファイル名を削除
       pattern = Pattern.compile(regex);
       matcher = pattern.matcher(filePath);
       folderPath = matcher.replaceFirst("");
       // リストに追加
       folderPathList.add(folderPath);
-      cursor.moveToNext();
+      mCursor.moveToNext();
     }
 
     // 重複削除
     Set<String> set = new HashSet<>(folderPathList);
     ArrayList<String > folderPathListReturn = new ArrayList<>(set);
-
-    return folderPathListReturn;
+    mfolderPathList = folderPathListReturn;
+    return mfolderPathList;
   }
 
   /**
@@ -161,28 +160,27 @@ public class FileManager {
       cursor.moveToFirst();
 
       mCursor = cursor;
-      setFilePaths(cursor);
+      setFilePaths();
     }
   }
 
   /**
    * ファイルパス一覧設定(文字列)
-   * @param cursor
    */
-  public void setFilePaths(Cursor cursor)
+  public void setFilePaths()
   {
     // フォルダパスリスト
     ArrayList<String > filePathList = new ArrayList<String>();
     // URI情報の先頭に移動
-    cursor.moveToFirst();
-    int pathIndex = cursor.getColumnIndex(
+    mCursor.moveToFirst();
+    int pathIndex = mCursor.getColumnIndex(
         MediaStore.Images.Media.DATA);
     String folderPath = "";
-    while(!cursor.isAfterLast()){
-      folderPath = cursor.getString(pathIndex);
+    while(!mCursor.isAfterLast()){
+      folderPath = mCursor.getString(pathIndex);
       // リストに追加
       filePathList.add(folderPath);
-      cursor.moveToNext();
+      mCursor.moveToNext();
     }
     // 保持
     mfilePathList = filePathList;
@@ -191,19 +189,18 @@ public class FileManager {
   /**
    * 代表画像ファイルパス取得
    * note.最新順に取得
-   * @param cursor
    * @return
    */
-  public ArrayList<ImageGridViewAdapter.GridViewItem> getFilePathForRepresentative(Cursor cursor)
+  public ArrayList<ImageGridViewAdapter.GridViewItem> getFilePathForRepresentative()
   {
     ArrayList<ImageGridViewAdapter.GridViewItem> gridViewItems = new ArrayList<ImageGridViewAdapter.GridViewItem>();
     HashMap<String,Integer> folderPathList = new HashMap<String,Integer>();
 
     // URI情報の末尾に移動
-    cursor.moveToLast();
-    int pathIndex = cursor.getColumnIndex(
+    mCursor.moveToLast();
+    int pathIndex = mCursor.getColumnIndex(
             MediaStore.Images.Media.DATA);
-    int nameIndex = cursor.getColumnIndex(
+    int nameIndex = mCursor.getColumnIndex(
             MediaStore.Images.Media.DISPLAY_NAME);
     String filePath = "";
     String folderPath = "";
@@ -212,11 +209,11 @@ public class FileManager {
     Pattern pattern;
     Matcher matcher;
     // ファイル確認
-    while(!cursor.isBeforeFirst()){
+    while(!mCursor.isBeforeFirst()){
       // ファイルパス取得
-      filePath = cursor.getString(pathIndex);
+      filePath = mCursor.getString(pathIndex);
       // ファイル名
-      regex = "/"+cursor.getString(nameIndex);
+      regex = "/"+mCursor.getString(nameIndex);
       // パスからファイル名を削除
       pattern = Pattern.compile(regex);
       matcher = pattern.matcher(filePath);
@@ -232,7 +229,7 @@ public class FileManager {
         item.folderPath = folderPath;
         gridViewItems.add(item);
       }
-      cursor.moveToPrevious();
+      mCursor.moveToPrevious();
     }
 
     return gridViewItems;
@@ -246,8 +243,7 @@ public class FileManager {
   public ArrayList<String> getAllFile(String folderPath)
   {
     File[] files =new File(folderPath).listFiles();
-    ArrayList<String> imageFilePath = new ArrayList<String>();
-
+    ArrayList<String > filePathList = new ArrayList<String>();
     // 画像ファイル取得
     for(int i=0; i< files.length; i++)
     {
@@ -259,13 +255,14 @@ public class FileManager {
         {
           if( files[i].getName().endsWith(IMAGE_EXTENSIONS[ext].toString()))
           {
-            imageFilePath.add(files[i].getPath());
+            filePathList.add(files[i].getPath());
             break;
           }
         }
       }
     }
-    return imageFilePath;
+    mfilePathList = filePathList;
+    return mfilePathList;
   }
 
 
@@ -274,14 +271,50 @@ public class FileManager {
    * @param filePath
    * @return
    */
-  public boolean deleteFile(String filePath)
+  public static void deleteFile(String filePath)
   {
+    String[] DELETE_PROJ = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA };
     File file = new File(filePath);
-    return file.delete();
+    if(file.exists()) {
+      // DBから指定パス箇所取得
+      Cursor cursor = ContextManager.getContext().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+          DELETE_PROJ,
+          MediaStore.Images.Media.DATA + " = ?",
+          new String[] { filePath },
+          null);
+      // 生データ削除
+      if(cursor.getCount() != 0) {
+        cursor.moveToFirst();
+        Uri deleteUri = ContentUris.appendId(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI.buildUpon(),
+            cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID))).build();
+        ContextManager.getContext().getContentResolver().delete(deleteUri, null, null);
+      }
+      // ファイル削除
+      file.delete();
+      cursor.close();
+    }
   }
-  public boolean deleteFile(File filePath)
+  public static boolean deleteFile(File filePath)
   {
     return filePath.delete();
+  }
+
+  public static void deleteFile(ArrayList<String>  filePathList)
+  {
+
+    // 指定リスト内のファイル全削除
+    for (String filePath: filePathList) {
+      deleteFile(filePath);
+    }
+  }
+  public void deleteAllFile()
+  {
+    // フォルダ内全画像削除
+    for (String filePath: mfilePathList) {
+      File file = new File(filePath);
+      file.delete();
+    }
   }
 
 }

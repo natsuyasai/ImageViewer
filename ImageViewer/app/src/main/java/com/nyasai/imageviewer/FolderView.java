@@ -2,8 +2,10 @@ package com.nyasai.imageviewer;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Debug;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,9 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.GridView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.security.auth.callback.Callback;
 
@@ -135,6 +139,12 @@ public class FolderView extends AppCompatActivity implements Callback {
         mGVClickListner.setCheckable(false);  // 非選択状態に設定
         break;
       case R.id.folder_menu_remove:     // 削除
+        // TODO:確認ダイアログ表示
+        // 削除確認
+        // ファイル削除
+        FileManager.deleteFile(getCheckFileList());
+        // 画面リフレッシュ
+        Common.refreshActivity(this);
         mGVClickListner.setCheckable(false);  // 非選択状態に設定
         break;
       case R.id.folder_select_chancel:  // 選択キャンセル
@@ -209,6 +219,46 @@ public class FolderView extends AppCompatActivity implements Callback {
         }
       }
     }
+  }
+
+  /**
+   * チェックしたファイル一覧を取得
+   */
+  public ArrayList<String> getCheckFileList()
+  {
+    ArrayList<Integer> checkOnListIdx = new ArrayList<Integer>();
+    // チェックボックスON項目のアイテムインデックス取得
+    for(int i=0; i<mGridView.getChildCount(); i++) // グリッドビューの要素数
+    {
+      ViewGroup gvChild = (ViewGroup)mGridView.getChildAt(i);
+      for(int j=0; j<gvChild.getChildCount(); j++) // グリッドビューの1要素内のアイテム探索
+      {
+        if(gvChild.getChildAt(j) instanceof CheckBox)
+        {
+          // チェックボックスがONとなっているアイテムのインデックスを保持
+          if(((CheckBox) gvChild.getChildAt(j)).isChecked() == true)
+          {
+            checkOnListIdx.add(i);
+          }
+        }
+      }
+    }
+    // チェックボックスONとなっているファイル名を取得
+    ArrayList<String> deleteFileList = new ArrayList<String>();
+    for(Integer idx : checkOnListIdx)
+    {
+      ViewGroup gvChild = (ViewGroup)mGridView.getChildAt(idx);
+      for(int j=0; j<gvChild.getChildCount(); j++) // グリッドビューの1要素内のアイテム探索
+      {
+        // ファイルパス取得
+        if(gvChild.getChildAt(j) instanceof EditText)
+        {
+          deleteFileList.add(String.valueOf(((EditText) gvChild.getChildAt(j)).getText()));
+          Log.d("DeleteFilePath",String.valueOf(((EditText) gvChild.getChildAt(j)).getText()));
+        }
+      }
+    }
+    return deleteFileList;
   }
   //endregion
 

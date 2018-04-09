@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     super.onActivityResult(requestCode, resultCode, data);
     if (data == null) {
       // フォルダ一覧表示
-      setupFile();
+      startMain();
     }
     else
     {
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
     super.onResume();
     if (mIsFirstExec == false) {
       // フォルダ一覧再表示
-      setupFile();
+      startMain();
     }
   }
 
@@ -153,9 +153,9 @@ public class MainActivity extends AppCompatActivity {
 
     // 端末内の画像ファイル一覧を取得し，グリッドビューに設定
     // 取得
-    MainActivity.this.mfileManager.getAllFileList();
+    mfileManager.getAllFileList();
     // 設定
-    MainActivity.this.setupFile();
+    setupFile();
     mIsFirstExec = false;
   }
 
@@ -166,8 +166,7 @@ public class MainActivity extends AppCompatActivity {
   private void setupFile()
   {
     // フォルダごとに一番はじめに見つかったファイルパスを取得
-    if(mGridViewData == null)
-      mGridViewData = mfileManager.getFilePathForRepresentative(mfileManager.getImageFileUri());
+    mGridViewData = mfileManager.getFilePathForRepresentative();
     // アダプタに登録
     ImageGridViewAdapter adapter = new ImageGridViewAdapter(this,
             mGridViewData,

@@ -1,6 +1,8 @@
 package com.nyasai.imageviewer;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
@@ -151,5 +153,16 @@ public class Common {
         else
             ans = tmp_a;
         return ans;
+    }
+
+  /**
+   * アクティビティの再描画
+   * @param activity 再描画対象アクティビティ
+   */
+  public static void refreshActivity(Activity activity)
+    {
+      Intent intent = activity.getIntent();
+      activity.finish();
+      activity.startActivity(intent);
     }
 }

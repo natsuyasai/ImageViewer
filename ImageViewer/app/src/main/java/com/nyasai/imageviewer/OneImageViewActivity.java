@@ -120,25 +120,10 @@ public class OneImageViewActivity extends AppCompatActivity {
           @Override
           public void onClick(DialogInterface dialog, int which) {
             String deleteFilePath =mFilePathList.get(mNowPosition);
-            File file = new File(deleteFilePath);
             // ファイルパスリストから削除するファイルを除き，画像を前のファイルに更新
             mFilePathList.remove(mNowPosition);
-            // SQLite更新
-            Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[]{MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA},
-                MediaStore.Images.Media.DATA + " = ?",
-                new String[]{deleteFilePath},
-                null);
-            if(cursor.getCount() != 0)
-            {
-              cursor.moveToFirst();
-              Uri deleteUli = ContentUris.appendId(
-                  MediaStore.Images.Media.EXTERNAL_CONTENT_URI.buildUpon(),
-                  cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID))).build();
-              getContentResolver().delete(deleteUli,null,null);
-            }
-            file.delete();
-            cursor.close();
+            // ファイル削除
+            FileManager.deleteFile(deleteFilePath);
             // ポジション修正
             if(mFilePathList.size() > 0) {
               // 複数ファイルが存在する時に先頭画像を削除する場合は，次に先頭になるファイルを選択
