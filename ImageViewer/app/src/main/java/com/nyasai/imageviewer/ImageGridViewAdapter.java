@@ -133,6 +133,10 @@ public class ImageGridViewAdapter extends BaseAdapter {
     {
       // 保持されていればそれを使用
       holder = (ViewHolder)convertView.getTag();
+      // テキストビュー設定
+      holder.textView.setText(splitStr[splitStr.length - 1]);
+      // ファイルパス保持
+      holder.editText.setText(imageFilePath);
     }
 
     // ビューサイズ設定
