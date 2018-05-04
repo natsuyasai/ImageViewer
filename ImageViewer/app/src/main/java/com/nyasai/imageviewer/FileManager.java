@@ -9,6 +9,8 @@ import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -242,7 +244,10 @@ public class FileManager {
    */
   public ArrayList<String> getAllFile(String folderPath)
   {
+    // 指定フォルダのファイル一覧を取得
     File[] files =new File(folderPath).listFiles();
+    // 名前順のため，更新日時順にソートし直す
+    execFilelistSortByUpdateDate(files, SORT_KIND_ASCENDING);
     ArrayList<String > filePathList = new ArrayList<String>();
     // 画像ファイル取得
     for(int i=0; i< files.length; i++)
@@ -263,6 +268,34 @@ public class FileManager {
     }
     mfilePathList = filePathList;
     return mfilePathList;
+  }
+
+  /**
+   * ファイルリストのソート処理
+   * @param files_ ファイルリスト
+   * @param sortKind ソート種別
+   * @return ソート後のファイルリスト
+   */
+  private final int SORT_KIND_ASCENDING = 0; // 昇順
+  private final int SROT_KIND_DESCENDING =1; // 降順
+  private File[] execFilelistSortByUpdateDate(File[] files_, final int sortKind)
+  {
+    File[] files = files_;
+    Arrays.sort(files, new Comparator<File>() {
+      @Override
+      public int compare(File f1, File f2) {
+        if(sortKind == SORT_KIND_ASCENDING) {
+          // 昇順
+          return f1.lastModified() >= f2.lastModified() ? -1 : 1;
+        }
+        else
+        {
+          // 降順
+          return f1.lastModified() >= f2.lastModified() ? 1 : -1;
+        }
+      }
+    });
+    return files;
   }
 
 
