@@ -247,7 +247,7 @@ public class FileManager {
     // 指定フォルダのファイル一覧を取得
     File[] files =new File(folderPath).listFiles();
     // 名前順のため，更新日時順にソートし直す
-    execFilelistSortByUpdateDate(files, SORT_KIND_ASCENDING);
+    files = execFilelistSortByUpdateDate(files, SORT_KIND_ASCENDING);
     ArrayList<String > filePathList = new ArrayList<String>();
     // 画像ファイル取得
     for(int i=0; i< files.length; i++)
