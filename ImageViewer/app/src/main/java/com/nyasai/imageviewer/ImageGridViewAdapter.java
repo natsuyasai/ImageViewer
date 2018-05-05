@@ -27,152 +27,152 @@ import java.util.Map;
  */
 public class ImageGridViewAdapter extends BaseAdapter {
 
-  // コンテキスト
-  private Context mContext;
-  // ビュー登録
-  private LayoutInflater mLayoutInflater;
-  // 表示データ
-  private ArrayList<GridViewItem> mItemList;
-  // リソース
-  private int mResource = 0;
+    // コンテキスト
+    private Context mContext;
+    // ビュー登録
+    private LayoutInflater mLayoutInflater;
+    // 表示データ
+    private ArrayList<GridViewItem> mItemList;
+    // リソース
+    private int mResource = 0;
 
-  /**
-   * グリッドビュー表示用
-   */
-  public static class GridViewItem {
-    public String imagePath;
-    public String folderPath;
-  }
-
-  /**
-   * コンストラクタ
-   * @param context
-   */
-  public ImageGridViewAdapter(Context context, ArrayList<GridViewItem> data, int resource) {
-    super();
-    this.mContext = context;
-    this.mItemList = data;
-    this.mResource = resource;
-    // サービスの取得（メインのライフサイクルから外れる）
-    mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-  }
-
-  /**
-   * データ数取得
-   */
-  @Override
-  public int getCount() {
-    return mItemList.size();
-  }
-
-  /**
-   * 指定された項目を取得
-   * @param i
-   * @return
-   */
-  @Override
-  public Object getItem(int i) {
-    return mItemList.get(i);
-  }
-
-  /**
-   * 指定された項目識別用ID値取得
-   * @param i
-   * @return
-   */
-  @Override
-  public long getItemId(int i) {
-    return 0;
-  }
-
-
-  /**
-   * グリッドビューの1コマずつの要素参照を保持
-   */
-  static class ViewHolder
-  {
-    ImageView imageView;
-    TextView textView;
-    EditText editText;
-    CheckBox checkBox;
-  }
-
-  /**
-   * グリッドビューにデータ表示(setAdapter実行にて呼び出される)
-   * @param i
-   * @param convertView
-   * @param parent
-   * @return
-   */
-  @Override
-  public View getView(int i, View convertView, ViewGroup parent) {
-    // ファイルパス取得
-    GridViewItem gridViewItem = mItemList.get(i);
-    String imageFilePath = gridViewItem.imagePath;
-    String imageFolderPath = gridViewItem.folderPath;
-    String[] splitStr = imageFolderPath.split("/",0); // ファイル名リスト
-
-    ViewHolder holder;
-    // ビューが空の場合
-    if(convertView == null)
-    {
-      // 現在のコマの参照を保持
-      holder = new ViewHolder();
-      convertView = mLayoutInflater.from(mContext).inflate(R.layout.grid_item_image,null);
-      holder.imageView = (ImageView) convertView.findViewById(R.id.gv_image);
-      holder.textView = (TextView) convertView.findViewById(R.id.gv_text);
-      holder.checkBox = (CheckBox)convertView.findViewById(R.id.gv_checkbox);
-      holder.editText = (EditText)convertView.findViewById(R.id.gv_editText);
-      convertView.setTag(holder);
-      // テキストビュー設定
-      holder.textView.setText(splitStr[splitStr.length - 1]);
-      // ファイルパス保持
-      holder.editText.setText(imageFilePath);
-    }
-    else
-    {
-      // 保持されていればそれを使用
-      holder = (ViewHolder)convertView.getTag();
-      // テキストビュー設定
-      holder.textView.setText(splitStr[splitStr.length - 1]);
-      // ファイルパス保持
-      holder.editText.setText(imageFilePath);
+    /**
+     * グリッドビュー表示用
+     */
+    public static class GridViewItem {
+        public String imagePath;
+        public String folderPath;
     }
 
-    // ビューサイズ設定
-    setGridViewSize(holder.imageView);
+    /**
+     * コンストラクタ
+     *
+     * @param context コンテキスト
+     */
+    public ImageGridViewAdapter(Context context, ArrayList<GridViewItem> data, int resource) {
+        super();
+        this.mContext = context;
+        this.mItemList = data;
+        this.mResource = resource;
+        // サービスの取得（メインのライフサイクルから外れる）
+        mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
 
-    // 画像を設定
-    if(holder.imageView != null)
-    {
-      // 画像設定
-      Picasso.Builder builder = new Picasso.Builder(mContext);
-      // エラー発生時，エラー内容を表示させる
-      builder.listener(new Picasso.Listener() {
-        @Override
-        public void onImageLoadFailed(Picasso picasso, Uri uri, Exception e) {
-          Log.d("getView",e.toString());
+    /**
+     * データ数取得
+     */
+    @Override
+    public int getCount() {
+        return mItemList.size();
+    }
+
+    /**
+     * 指定された項目を取得
+     *
+     * @param i 選択位置
+     * @return 対象オブジェクト
+     */
+    @Override
+    public Object getItem(int i) {
+        return mItemList.get(i);
+    }
+
+    /**
+     * 指定された項目識別用ID値取得
+     *
+     * @param i 選択位置
+     * @return 識別ID
+     */
+    @Override
+    public long getItemId(int i) {
+        return 0;
+    }
+
+
+    /**
+     * グリッドビューの1コマずつの要素参照を保持
+     */
+    static class ViewHolder {
+        ImageView imageView;
+        TextView textView;
+        EditText editText;
+        CheckBox checkBox;
+    }
+
+    /**
+     * グリッドビューにデータ表示(setAdapter実行にて呼び出される)
+     *
+     * @param i 選択位置
+     * @param convertView ビューオブジェクト
+     * @param parent 親オブジェクト
+     * @return
+     */
+    @Override
+    public View getView(int i, View convertView, ViewGroup parent) {
+        // ファイルパス取得
+        GridViewItem gridViewItem = mItemList.get(i);
+        String imageFilePath = gridViewItem.imagePath;
+        String imageFolderPath = gridViewItem.folderPath;
+        String[] splitStr = imageFolderPath.split("/", 0); // ファイル名リスト
+
+        ViewHolder holder;
+        // ビューが空の場合
+        if (convertView == null) {
+            // 現在のコマの参照を保持
+            holder = new ViewHolder();
+            convertView = mLayoutInflater.from(mContext).inflate(R.layout.grid_item_image, null);
+            holder.imageView = (ImageView) convertView.findViewById(R.id.gv_image);
+            holder.textView = (TextView) convertView.findViewById(R.id.gv_text);
+            holder.checkBox = (CheckBox) convertView.findViewById(R.id.gv_checkbox);
+            holder.editText = (EditText) convertView.findViewById(R.id.gv_editText);
+            convertView.setTag(holder);
+            // テキストビュー設定
+            holder.textView.setText(splitStr[splitStr.length - 1]);
+            // ファイルパス保持
+            holder.editText.setText(imageFilePath);
+        } else {
+            // 保持されていればそれを使用
+            holder = (ViewHolder) convertView.getTag();
+            // テキストビュー設定
+            holder.textView.setText(splitStr[splitStr.length - 1]);
+            // ファイルパス保持
+            holder.editText.setText(imageFilePath);
         }
-      });
-      // リサイズ値取得
-      BitmapFactory.Options preOptions = Common.getBitMapSize(imageFilePath);
-      int resizeVal = Common.getResizeValue(preOptions);
-      if(resizeVal != 0) {
-        // 画像の読み込み，設定
-        builder.build()
-            .load(new File(imageFilePath))
-            .resize(preOptions.outWidth / resizeVal, preOptions.outHeight / resizeVal)
-            .into(holder.imageView, new Callback() {
-              @Override
-              public void onSuccess() {
-              }
-              @Override
-              public void onError() {
-                Log.d("getView", "Error");
-              }
+
+        // ビューサイズ設定
+        setGridViewSize(holder.imageView);
+
+        // 画像を設定
+        if (holder.imageView != null) {
+            // 画像設定
+            Picasso.Builder builder = new Picasso.Builder(mContext);
+            // エラー発生時，エラー内容を表示させる
+            builder.listener(new Picasso.Listener() {
+                @Override
+                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception e) {
+                    Log.d("getView", e.toString());
+                }
             });
-      }
-      // 非同期読み込み
+            // リサイズ値取得
+            BitmapFactory.Options preOptions = Common.getBitMapSize(imageFilePath);
+            int resizeVal = Common.getResizeValue(preOptions);
+            if (resizeVal != 0) {
+                // 画像の読み込み，設定
+                builder.build()
+                        .load(new File(imageFilePath))
+                        .resize(preOptions.outWidth / resizeVal, preOptions.outHeight / resizeVal)
+                        .into(holder.imageView, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                            }
+
+                            @Override
+                            public void onError() {
+                                Log.d("getView", "Error");
+                            }
+                        });
+            }
+            // 非同期読み込み
 //      AsyncTask<GetViewTaskStartParam,Void,GetViewTaskResulttParam> task = new AsyncTask<GetViewTaskStartParam, Void, GetViewTaskResulttParam>() {
 //        private ImageView mImageView;
 //        private String tag;
@@ -228,20 +228,20 @@ public class ImageGridViewAdapter extends BaseAdapter {
 //      param.viewHolder = new ViewHolder();
 //      param.viewHolder.imageView = imageView;
 //      task.execute(param);
+        }
+        return convertView;
     }
-    return convertView;
-  }
 
-  /**
-   * グリッドビューアイテムのサイズ設定
-   * @param imageView
-   */
-  private void setGridViewSize(ImageView imageView)
-  {
-    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
-    params.width = WindowSizeManager.getWidth() / 2;
-    params.height = (WindowSizeManager.getHeight() / 4) - 10;
-    imageView.setLayoutParams(params);
-  }
+    /**
+     * グリッドビューアイテムのサイズ設定
+     *
+     * @param imageView 表示対象のイメージビュー
+     */
+    private void setGridViewSize(ImageView imageView) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
+        params.width = WindowSizeManager.getWidth() / 2;
+        params.height = (WindowSizeManager.getHeight() / 4) - 10;
+        imageView.setLayoutParams(params);
+    }
 
 }
